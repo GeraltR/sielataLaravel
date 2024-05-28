@@ -1,4 +1,4 @@
-<p align="center"> <a href="https://www.sielata.com.pl"><img src="https://www.sielata.com.pl/assets/onepage2/img/sielata_logo_53w.gif" alt="SieLata" style="width:200px;" ></a>
+<p align="center"> <a href="https://www.sielata.com.pl"><img src="https://www.sielata.com.pl/logofestiwal_git.png" alt="SieLata" style="width:200px;" ></a>
 </p>
 ## About me
 
