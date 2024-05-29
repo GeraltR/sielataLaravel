@@ -10,7 +10,7 @@ I have been programming since years ago and it is still my passion, but not the 
 <p align="center">
 <a href="https://travis-ci.com/GeraltR/"><img src="https://app.travis-ci.com/GeraltR/sielataLaravel.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework#v8.83.27"><img src="https://img.shields.io/badge/laravel-v8.83.27-blue" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework#v8.83.27"><img src="https://img.shields.io/badge/laravel-v8.83.27-blue" alt="Laravel 8.83.27 "></a>
 <!-- <img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a> -->
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
