@@ -17,3 +17,6 @@ yarn-error.log
 logofestiwal_git.png
 *.gitignore
 .gitattributes
+bootstrap/cache/packages.php
+bootstrap/cache/services.php
+/storage
