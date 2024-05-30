@@ -14,7 +14,7 @@ return [
     */
 
     'reset' => 'Twojehasło zostało zmienione!',
-    'sent' => 'Wysłaliśmy e-mailem linkiem do ustawienia nowego hasła!',
+    'sent' => 'Wysłaliśmy na podany adres e-maila z linkiem do ustawienia nowego hasła!',
     'throttled' => 'Proszę poczekać przed ponowną próbą.',
     'token' => 'Token dla zmiany hasła jest nieprawidłowy.',
     'user' => "Nie możemy znaleźć użytkownika z tym adresem e-mail.",

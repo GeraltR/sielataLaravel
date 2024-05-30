@@ -2,7 +2,7 @@
 </p>
 ## About me
 
-I have been programming since years ago and it is still my passion, but not the only one. The passion for flying and airplanes was stimulus to making and developing first application to service modeller’s competition in my town. The competition is taking place every year and this application will be a third version. In the first version it was only an Internet formula to register modellers. Next I tried another platforms like Java and C# to service the competition. Finally I chose to use PHP, JS specific JQuery and Ajax and others. Now I wanted to change and refresh the design and use the newest technology from backend Laravel and frontend React.
+I have been programming since years ago and it is still my passion, but not the only one. The passion for flying and airplanes was stimulus to making and developing first application to service modeller’s competition in my town. The competition is taking place every year and this application will be a third version. In the first version it was only an Internet formula to register modellers. Next I tried another platforms like Java and C# to service the competition. Finally I chose to use PHP, JS specific jQuery and Ajax and others. Now I wanted to change and refresh the design and use the newest technology from backend Laravel and frontend React.
 
 <p align="center">
 <a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
