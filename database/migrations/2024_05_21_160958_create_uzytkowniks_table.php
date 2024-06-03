@@ -31,6 +31,7 @@ class CreateUzytkowniksTable extends Migration
             $table->tinyInteger('admin')->unsigned()->default(0);
             $table->string('haslo2', 50)->nullable();
             $table->integer('idopiekuna')->unsigned()->nullable();
+            $table->boolean('isteacher')->nullable()->default(false);
             $table->rememberToken();
         });
     }
