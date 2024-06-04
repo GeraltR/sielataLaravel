@@ -96,7 +96,9 @@ class UzytkownikController extends Controller
             'rokur' => $request->rokur,
             'klub' => $request->klub,
             'data' => $datetime,
-            'admin' => 0
+            'admin' => 0,
+            'idopiekuna' => $request->idopiekuna,
+            'isteacher' => $request->isteacher,
         ]);
         return 'moje' . $id;
     }
