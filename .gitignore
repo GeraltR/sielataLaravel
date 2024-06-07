@@ -21,3 +21,4 @@ bootstrap/cache/packages.php
 bootstrap/cache/services.php
 /storage
 /sielata
+.env.production
