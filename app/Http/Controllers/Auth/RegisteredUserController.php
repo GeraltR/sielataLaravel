@@ -9,13 +9,14 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules;
 
 
 
 class RegisteredUserController extends Controller
 {
-        /**
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -31,8 +32,9 @@ class RegisteredUserController extends Controller
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:uzytkownik'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'rokur' => ['required', 'integer', 'between:1900,'.$maxYear],
+            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
             'miasto' => ['required', 'string', 'max:255'],
+            'recaptchatoken' => ['required', 'google_captcha'],
         ]);
 
 
@@ -54,8 +56,8 @@ class RegisteredUserController extends Controller
 
         return response()->noContent();
     }
-    
-      public function messages()
+
+    public function messages()
     {
         return [
             'imie.required' => 'Imię jest wymagane.',
@@ -68,8 +70,8 @@ class RegisteredUserController extends Controller
             'password.string' => 'The password field must be a string.',
             'password.min' => 'The password must be at least 8 characters long.',
             'password.confirmed' => 'The password confirmation does not match.',
-            'rokur.required' => 'Pole rok urodzenia musi być podane w celu koreślenia klasy wiekowej', 
-            'rokur.between' =>'Rok urodzenia musi być większy niż 1900 i mniejszy od obecnego',            
+            'rokur.required' => 'Pole rok urodzenia musi być podane w celu koreślenia klasy wiekowej',
+            'rokur.between' => 'Rok urodzenia musi być większy niż 1900 i mniejszy od obecnego',
         ];
     }
 }
