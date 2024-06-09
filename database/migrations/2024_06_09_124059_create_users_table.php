@@ -3,10 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
-
-class CreateUzytkowniksTable extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,14 +13,13 @@ class CreateUzytkowniksTable extends Migration
      */
     public function up()
     {
-        Schema::create('uzytkownik', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('imie', 100);
             $table->string('nazwisko', 100);
             $table->string('password', 255);
             $table->string('email', 100)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('kod', 32)->nullable();
             $table->dateTime('data');
             $table->tinyInteger('status')->default(0);
             $table->string('miasto', 40);
@@ -43,8 +40,6 @@ class CreateUzytkowniksTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('uzytkownik');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        Schema::dropIfExists('users');
     }
 }

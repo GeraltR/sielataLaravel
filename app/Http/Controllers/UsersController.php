@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Uzytkownik;
+use App\Models\Users;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 
-class UzytkownikController extends Controller
+
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -46,10 +47,10 @@ class UzytkownikController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Uzytkownik  $uzytkownik
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Uzytkownik $uzytkownik)
+    public function show($id)
     {
         //
     }
@@ -57,10 +58,10 @@ class UzytkownikController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Uzytkownik  $uzytkownik
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Uzytkownik $uzytkownik)
+    public function edit($id)
     {
         //
     }
@@ -69,7 +70,7 @@ class UzytkownikController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Uzytkownik  $uzytkownik
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -77,17 +78,17 @@ class UzytkownikController extends Controller
         $datetime = Carbon::now()->toDateTimeString();
         $maxYear = date('Y');
 
-        $uzytkownik = Uzytkownik::findOrFail($id);
+        $user = Users::findOrFail($id);
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('uzytkownik')->ignore($uzytkownik->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
-        $uzytkownik->update([
+        $user->update([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'email' => $request->email,
@@ -106,10 +107,10 @@ class UzytkownikController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Uzytkownik  $uzytkownik
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Uzytkownik $uzytkownik)
+    public function destroy($id)
     {
         //
     }

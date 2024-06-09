@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Uzytkownik;
+use App\Models\Users;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:uzytkownik'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
             'miasto' => ['required', 'string', 'max:255'],
@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
         ]);
 
 
-        $uzytkownik = Uzytkownik::create([
+        $user = Users::create([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'email' => $request->email,
@@ -50,9 +50,9 @@ class RegisteredUserController extends Controller
             'admin' => 0
         ]);
 
-        event(new Registered($uzytkownik));
+        event(new Registered($user));
 
-        Auth::login($uzytkownik);
+        Auth::login($user);
 
         return response()->noContent();
     }

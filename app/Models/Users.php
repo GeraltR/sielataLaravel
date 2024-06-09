@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Uzytkownik extends Authenticatable
+
+class Users extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'uzytkownik';
+    //protected $table = 'users';
     public $timestamps = false;
 
     protected $fillable = [
