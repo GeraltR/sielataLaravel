@@ -20,3 +20,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
+Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
+Route::middleware(['auth:sanctum'])->post('/add_pupil/{id}', [UsersController::class, 'add_pupil']);

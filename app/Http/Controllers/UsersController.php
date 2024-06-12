@@ -104,6 +104,19 @@ class UsersController extends Controller
         return 'moje' . $id;
     }
 
+    public function change_teacher(Request $request, $id)
+    {
+        $user = Users::findOrFail($id)->update(['isteacher' => $request->isteacher]);
+        return 'isteacher ' . $id;
+    }
+
+    public function add_pupil(Request $request, $id)
+    {
+        return 'pupil_id';
+    }
+
+
+
     /**
      * Remove the specified resource from storage.
      *
