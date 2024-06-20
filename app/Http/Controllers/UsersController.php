@@ -110,7 +110,7 @@ class UsersController extends Controller
         return 'isteacher ' . $id;
     }
 
-    public function add_pupil(Request $request, $id)
+    public function add_pupill(Request $request, $id)
     {
         $datetime = Carbon::now()->toDateTimeString();
         $maxYear = date('Y');
@@ -124,7 +124,7 @@ class UsersController extends Controller
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
-        $pupil = Users::create([
+        $pupill = Users::create([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'email' => $request->email,
@@ -135,23 +135,23 @@ class UsersController extends Controller
             'data' => $datetime,
         ]);
 
-        $last_id = $pupil->id;
+        $last_id = $pupill->id;
         return $last_id;
     }
 
-    public function pupils(Request $request, $id)
+    public function get_pupills(Request $request, $id)
     {
 
         $idopiekuna = auth()->user()->id;
         if ($idopiekuna) {
-            $pupils = Users::where('idopiekuna', $id)->get();
+            $pupills = Users::where('idopiekuna', $id)->get();
             return  response()->json([
                 'status' => 200,
-                'pupils' => $pupils
+                'pupills' => $pupills
             ]);
         } else response()->json([
             'status' => 200,
-            'pupils' => []
+            'pupills' => []
         ]);
     }
 

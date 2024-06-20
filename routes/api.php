@@ -18,8 +18,8 @@ use App\Http\Controllers\UsersController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware(['auth:sanctum'])->get('/pupils/{id}', [UsersController::class, 'pupils']);
+Route::middleware(['auth:sanctum'])->get('/pupills/{id}', [UsersController::class, 'get_pupills']);
 
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
-Route::middleware(['auth:sanctum'])->post('/add_pupil/{id}', [UsersController::class, 'add_pupil']);
+Route::middleware(['auth:sanctum'])->post('/add_pupill/{id}', [UsersController::class, 'add_pupill']);
