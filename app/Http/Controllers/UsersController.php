@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Users;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 
 
 class UsersController extends Controller
@@ -101,7 +101,7 @@ class UsersController extends Controller
             'idopiekuna' => $request->idopiekuna,
             'isteacher' => $request->isteacher,
         ]);
-        return 'moje' . $id;
+        return $id;
     }
 
     public function change_teacher(Request $request, $id)
@@ -112,10 +112,48 @@ class UsersController extends Controller
 
     public function add_pupil(Request $request, $id)
     {
-        return 'pupil_id';
+        $datetime = Carbon::now()->toDateTimeString();
+        $maxYear = date('Y');
+
+        $request->validate([
+            'imie' => ['required', 'string', 'max:255'],
+            'nazwisko' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
+            'idopiekuna' => ['required', 'integer'],
+            'miasto' => ['required', 'string', 'max:255'],
+        ]);
+
+        $pupil = Users::create([
+            'imie' => $request->imie,
+            'nazwisko' => $request->nazwisko,
+            'email' => $request->email,
+            'password' => "",
+            'miasto' => $request->miasto,
+            'rokur' => $request->rokur,
+            'idopiekuna' => $request->idopiekuna,
+            'data' => $datetime,
+        ]);
+
+        $last_id = $pupil->id;
+        return $last_id;
     }
 
+    public function pupils(Request $request, $id)
+    {
 
+        $idopiekuna = auth()->user()->id;
+        if ($idopiekuna) {
+            $pupils = Users::where('idopiekuna', $id)->get();
+            return  response()->json([
+                'status' => 200,
+                'pupils' => $pupils
+            ]);
+        } else response()->json([
+            'status' => 200,
+            'pupils' => []
+        ]);
+    }
 
     /**
      * Remove the specified resource from storage.
