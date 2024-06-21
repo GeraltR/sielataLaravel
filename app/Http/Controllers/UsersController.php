@@ -155,6 +155,12 @@ class UsersController extends Controller
         ]);
     }
 
+    public function delete_pupill(Request $request, $id)
+    {
+        Users::findOrFail($id)->delete();
+        return response()->noContent();
+    }
+
     /**
      * Remove the specified resource from storage.
      *

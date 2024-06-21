@@ -23,3 +23,4 @@ Route::middleware(['auth:sanctum'])->get('/pupills/{id}', [UsersController::clas
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
 Route::middleware(['auth:sanctum'])->post('/add_pupill/{id}', [UsersController::class, 'add_pupill']);
+Route::middleware(['auth:sanctum'])->delete('/{id}', [UsersController::class, 'delete_pupill']);
