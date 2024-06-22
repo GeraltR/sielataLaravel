@@ -131,6 +131,7 @@ class UsersController extends Controller
             'password' => "",
             'miasto' => $request->miasto,
             'rokur' => $request->rokur,
+            'klub' => $request->klub,
             'idopiekuna' => $request->idopiekuna,
             'data' => $datetime,
         ]);
@@ -161,6 +162,34 @@ class UsersController extends Controller
         return response()->noContent();
     }
 
+    public function update_pupill(Request $request, $id)
+    {
+        $datetime = Carbon::now()->toDateTimeString();
+        $maxYear = date('Y');
+
+        $pupill = Users::findOrFail($id);
+        $request->validate([
+            'imie' => ['required', 'string', 'max:255'],
+            'nazwisko' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($pupill->id)],
+            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
+            'idopiekuna' => ['required', 'integer'],
+            'miasto' => ['required', 'string', 'max:255'],
+        ]);
+
+        $pupill->update([
+            'imie' => $request->imie,
+            'nazwisko' => $request->nazwisko,
+            'email' => $request->email,
+            'password' => "",
+            'rokur' => $request->rokur,
+            'miasto' => $request->miasto,
+            'klub' => $request->klub,
+            'data' => $datetime,
+            'idopiekuna' => $request->idopiekuna,
+        ]);
+        return $id;
+    }
     /**
      * Remove the specified resource from storage.
      *
