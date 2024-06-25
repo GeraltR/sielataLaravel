@@ -110,7 +110,7 @@ class UsersController extends Controller
         return 'isteacher ' . $id;
     }
 
-    public function add_pupill(Request $request, $id)
+    public function add_learner(Request $request, $id)
     {
         $datetime = Carbon::now()->toDateTimeString();
         $maxYear = date('Y');
@@ -124,7 +124,7 @@ class UsersController extends Controller
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
-        $pupill = Users::create([
+        $learner = Users::create([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'email' => $request->email,
@@ -134,60 +134,63 @@ class UsersController extends Controller
             'klub' => $request->klub,
             'idopiekuna' => $request->idopiekuna,
             'data' => $datetime,
+            'status' => $request->status,
         ]);
 
-        $last_id = $pupill->id;
+        $last_id = $learner->id;
         return $last_id;
     }
 
-    public function get_pupills(Request $request, $id)
+    public function get_learners(Request $request, $id)
     {
 
         $idopiekuna = auth()->user()->id;
         if ($idopiekuna) {
-            $pupills = Users::where('idopiekuna', $id)->get();
+            $learners = Users::where('idopiekuna', $id)->get();
             return  response()->json([
                 'status' => 200,
-                'pupills' => $pupills
+                'learners' => $learners
             ]);
         } else response()->json([
             'status' => 200,
-            'pupills' => []
+            'learners' => []
         ]);
     }
 
-    public function delete_pupill(Request $request, $id)
+    public function delete_learner(Request $request, $id)
     {
         Users::findOrFail($id)->delete();
         return response()->noContent();
     }
 
-    public function update_pupill(Request $request, $id)
+    public function update_learner(Request $request, $id)
     {
         $datetime = Carbon::now()->toDateTimeString();
         $maxYear = date('Y');
 
-        $pupill = Users::findOrFail($id);
+        $learner = Users::findOrFail($id);
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($pupill->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($learner->id)],
             'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
             'idopiekuna' => ['required', 'integer'],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
-        $pupill->update([
+        $learner->update([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
-            'email' => $request->email,
             'password' => "",
             'rokur' => $request->rokur,
             'miasto' => $request->miasto,
             'klub' => $request->klub,
             'data' => $datetime,
             'idopiekuna' => $request->idopiekuna,
+            'status' => $request->status,
         ]);
+        if ($request->status != 2)
+            $learner->update(['email' => $request->email]);
         return $id;
     }
     /**

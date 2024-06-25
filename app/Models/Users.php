@@ -29,7 +29,8 @@ class Users extends Authenticatable
         'klub',
         'admin',
         'isteacher',
-        'idopiekuna'
+        'idopiekuna',
+        'status',
     ];
 
     protected $hidden = [
