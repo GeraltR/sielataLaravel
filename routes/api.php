@@ -20,7 +20,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware(['auth:sanctum'])->get('/learners/{id}', [UsersController::class, 'get_learners']);
-Route::middleware(['auth:sanctum'])->get('/categories/{kind}', [UsersController::class, 'index']);
+Route::middleware(['auth:sanctum'])->get('/categories/{kind}', [CategoriesController::class, 'get_categories']);
 
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
