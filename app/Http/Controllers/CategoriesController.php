@@ -14,14 +14,14 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($kind)
+    public function index()
     {
         echo 0;
     }
 
-    public function get_categories(Request $request, $kind)
+    public function get_categories(Request $request)
     {
-        $category = Categories::where('klasa', $kind)->get();
+        $category = Categories::get();
         return response()->json([
             "status" => 200,
             "categories" => $category

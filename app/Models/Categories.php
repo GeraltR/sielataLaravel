@@ -9,6 +9,8 @@ class Categories extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'idkat',
         'symbol',
