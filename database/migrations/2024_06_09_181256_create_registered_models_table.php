@@ -17,13 +17,13 @@ class CreateRegisteredModelsTable extends Migration
     {
         Schema::create('registered_models', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('Nazwa', 150);
-            $table->string('Producent', 100)->nullable();
-            $table->string('Skala', 100)->nullable();
-            $table->tinyInteger('Styl')->unsigned()->default(0);
+            $table->string('nazwa', 150);
+            $table->string('producent', 100)->nullable();
+            $table->string('skala', 100)->nullable();
+            $table->tinyInteger('styl')->unsigned()->default(0);
             $table->integer('konkurs')->unsigned()->default(0);
             $table->tinyInteger('wynik')->unsigned()->default(0);
-            $table->integer('IdParent')->unsigned()->nullable();
+            $table->integer('idparent')->unsigned()->nullable();
             $table->foreignIdFor(Users::class);
             $table->foreignIdFor(Categories::class);
         });

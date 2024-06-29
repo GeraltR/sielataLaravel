@@ -12,13 +12,13 @@ class RegisteredModels extends Model
 
     protected $fillable = [
         'id',
-        'Nazwa',
-        'Producent',
-        'Skala',
-        'Styl',
+        'nazwa',
+        'producent',
+        'skala',
+        'styl',
         'konkurs',
         'wynik',
-        'IdParent',
+        'idparent',
         'users_id',
         'categories_id'
     ];

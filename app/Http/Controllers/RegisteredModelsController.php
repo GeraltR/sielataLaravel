@@ -35,20 +35,20 @@ class RegisteredModelsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $users_id, $categories_id)
+    public function store(Request $request)
     {
         $request->validate([
-            'Nazwa' => ['required', 'string', 'max:150'],
-            'Producent' => ['required', 'string', 'max:100'],
-            'Skala' => ['required', 'string', 'max:100'],
+            'nazwa' => ['required', 'string', 'max:150'],
+            'producent' => ['required', 'string', 'max:100'],
+            'skala' => ['required', 'string', 'max:100'],
             'users_id' => ['required', 'integer'],
             'categories_id' => ['required', 'integer']
         ]);
 
         $registered_model = RegisteredModels::create([
-            'Nazwa' => $request->Nazwa,
-            'Producent' => $request->Producent,
-            'Skala' => $request->Skala,
+            'nazwa' => $request->nazwa,
+            'producent' => $request->producent,
+            'skala' => $request->skala,
             'users_id' => $request->users_id,
             'categories_id' => $request->categories_id
         ]);

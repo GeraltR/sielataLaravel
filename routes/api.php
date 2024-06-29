@@ -27,7 +27,7 @@ Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController:
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
 Route::middleware(['auth:sanctum'])->post('/add_learner/{id}', [UsersController::class, 'add_learner']);
 Route::middleware(['auth:sanctum'])->post('/update_learner/{id}', [UsersController::class, 'update_learner']);
-Route::middleware(['auth:sanctum'])->post('/add_model/{users_id}/{categories_id}', [RegisteredModelsController::class, 'store']);
+Route::middleware(['auth:sanctum'])->post('/add_model', [RegisteredModelsController::class, 'store']);
 
 
 Route::middleware(['auth:sanctum'])->delete('/{id}', [UsersController::class, 'delete_learner']);
