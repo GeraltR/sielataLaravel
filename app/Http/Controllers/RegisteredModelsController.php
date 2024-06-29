@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Models\RegisteredModels;
 
 class RegisteredModelsController extends Controller
@@ -39,8 +38,6 @@ class RegisteredModelsController extends Controller
     {
         $request->validate([
             'nazwa' => ['required', 'string', 'max:150'],
-            'producent' => ['required', 'string', 'max:100'],
-            'skala' => ['required', 'string', 'max:100'],
             'users_id' => ['required', 'integer'],
             'categories_id' => ['required', 'integer']
         ]);
@@ -63,9 +60,16 @@ class RegisteredModelsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function get_models(Request $request, $id)
     {
-        //
+        $models = RegisteredModels::where('users_id', $id)
+            ->join('categories', 'categories_id', '=', 'idkat')
+            ->select('registered_models.*', 'categories.klasa')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
     }
 
     /**
@@ -86,9 +90,27 @@ class RegisteredModelsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update_model(Request $request, $id)
     {
-        //
+        $model = RegisteredModels::findOrFail($id);
+        $request->validate([
+            'nazwa' => ['required', 'string', 'max:150'],
+            'users_id' => ['required', 'integer'],
+            'categories_id' => ['required', 'integer']
+        ]);
+        $model->update([
+            'nazwa' => $request->nazwa,
+            'producent' => $request->producent,
+            'skala' => $request->skala,
+            'categories_id' => $request->categories_id,
+        ]);
+        return $id;
+    }
+
+    public function delete_model(Request $request, $id)
+    {
+        RegisteredModels::findOrFail($id)->delete();
+        return response()->noContent();
     }
 
     /**
