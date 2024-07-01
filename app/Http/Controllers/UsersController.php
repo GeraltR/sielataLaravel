@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Users;
+use App\Models\RegisteredModels;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -159,7 +160,9 @@ class UsersController extends Controller
 
     public function delete_learner(Request $request, $id)
     {
-        Users::findOrFail($id)->delete();
+        $model = RegisteredModels::where('users_id', '=', $id);
+        if (!$model)
+            Users::findOrFail($id)->delete();
         return response()->noContent();
     }
 

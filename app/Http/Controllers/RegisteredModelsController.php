@@ -64,7 +64,7 @@ class RegisteredModelsController extends Controller
     {
         $models = RegisteredModels::where('users_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
-            ->select('registered_models.*', 'categories.klasa')
+            ->select('registered_models.*', 'categories.klasa', 'categories.symbol', 'categories.nazwa as categoryName')
             ->get();
         return response()->json([
             'status' => 200,
