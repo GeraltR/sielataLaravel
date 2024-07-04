@@ -160,7 +160,7 @@ class UsersController extends Controller
 
     public function delete_learner(Request $request, $id)
     {
-        $model = RegisteredModels::where('users_id', '=', $id);
+        $model = RegisteredModels::where('users_id', '=', $id)->first();
         if (!$model)
             Users::findOrFail($id)->delete();
         return response()->noContent();
