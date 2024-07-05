@@ -19,9 +19,9 @@ class CategoriesController extends Controller
         echo 0;
     }
 
-    public function get_categories(Request $request)
+    public function get_categories(Request $request, $year)
     {
-        $category = Categories::get();
+        $category = Categories::where('rok', '=', $year)->get();
         return response()->json([
             "status" => 200,
             "categories" => $category
