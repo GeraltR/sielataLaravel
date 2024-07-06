@@ -83,7 +83,7 @@ class UsersController extends Controller
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->maxYear()],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
@@ -116,7 +116,7 @@ class UsersController extends Controller
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->maxYear()],
             'idopiekuna' => ['required', 'integer'],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
@@ -170,7 +170,7 @@ class UsersController extends Controller
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($learner->id)],
-            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->maxYear()],
             'idopiekuna' => ['required', 'integer'],
             'miasto' => ['required', 'string', 'max:255'],
         ]);

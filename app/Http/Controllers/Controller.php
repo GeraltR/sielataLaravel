@@ -12,15 +12,27 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function MaxYear()
+    public function maxYear()
     {
         $datetime = Carbon::now()->toDateTimeString();
         return date('Y');
     }
 
-    //in the future this function must be read value of parameter table
-    public function Year()
+    //in the future this block functions must be read value of parameter table
+    public function year()
     {
-        return $this->MaxYear();
+        return $this->maxYear();
     }
+
+    public function emptyCartonClass()
+    {
+        return 1;
+    }
+
+    public function emptyPlasticClass()
+    {
+        return 26;
+    }
+
+    //end parameteres function
 }

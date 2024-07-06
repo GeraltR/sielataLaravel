@@ -2,20 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RegisteredModels;
 
 class RegisteredModelsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private function listModels($id)
     {
-        //
+        if ($id != $this->emptyCartonClass() && $id != $this->emptyPlasticClass() && $id != 0)
+            return RegisteredModels::where('categories_id', $id);
+        else return RegisteredModels::all();
+    }
+
+    public function get_listModels(Request $request, $id)
+    {
+        $maxYear = $this->maxYear();
+        if ($id != 0) {
+            $field = 'categories.klasa';
+            $mustby = '=';
+            if ($id == 1)
+                $id = 'K';
+            else
+                $id = 'P';
+        } else {
+            $field = 'users.id';
+            $mustby = '>=';
+        }
+        $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'users_id', 'users.id')
+            ->select(
+                'registered_models.*',
+                'categories.klasa',
+                'categories.symbol',
+                'categories.nazwa as categoryName',
+                'users.imie',
+                'users.nazwisko',
+                'users.miasto',
+                'users.klub',
+                'users.rokur',
+                DB::raw('IF (users.rokur >= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur < ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
+            )
+            ->where($field, $mustby, $id)
+            ->orderBy('registered_models.id')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
     }
 
     /**
@@ -73,15 +109,33 @@ class RegisteredModelsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the registered model with contestant and category filter.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function list_contestant($id)
     {
-        //
+        $list = RegisteredModelsDB::where('categories_id', $id)
+            ->join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'user_id', '=', 'id')
+            ->select(
+                'registered_models.*',
+                'categories.klasa',
+                'categories.symbol',
+                'categories.nazwa as categoryName',
+                'users.imie',
+                'users.nazwisko',
+                'users.miasto',
+                'users.rokur'
+            )
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'listContestant' => $list
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.
