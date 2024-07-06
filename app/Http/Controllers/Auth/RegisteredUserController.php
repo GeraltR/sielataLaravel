@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Users;
-use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules;
+use Carbon\Carbon;
 
 
 
@@ -24,15 +24,13 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        $datetime = Carbon::now()->toDateTimeString();
-        $maxYear = date('Y');
 
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
             'miasto' => ['required', 'string', 'max:255'],
             'recaptchatoken' => ['required', 'google_captcha'],
         ]);
@@ -46,7 +44,7 @@ class RegisteredUserController extends Controller
             'miasto' => $request->miasto,
             'rokur' => $request->rokur,
             'klub' => $request->klub,
-            'data' => $datetime,
+            'data' => Carbon::now()->toDateTimeString(),
             'admin' => 0
         ]);
 

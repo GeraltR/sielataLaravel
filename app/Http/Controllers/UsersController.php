@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Users;
 use App\Models\RegisteredModels;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 
 class UsersController extends Controller
@@ -57,14 +57,14 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for finding name and surname user.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function find($find)
     {
-        //
+        $user = Users::where();
     }
 
     /**
@@ -76,8 +76,6 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $datetime = Carbon::now()->toDateTimeString();
-        $maxYear = date('Y');
 
         $user = Users::findOrFail($id);
         $request->validate([
@@ -85,7 +83,7 @@ class UsersController extends Controller
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
@@ -97,7 +95,7 @@ class UsersController extends Controller
             'miasto' => $request->miasto,
             'rokur' => $request->rokur,
             'klub' => $request->klub,
-            'data' => $datetime,
+            'data' => Carbon::now()->toDateTimeString(),
             'admin' => 0,
             'idopiekuna' => $request->idopiekuna,
             'isteacher' => $request->isteacher,
@@ -113,14 +111,12 @@ class UsersController extends Controller
 
     public function add_learner(Request $request, $id)
     {
-        $datetime = Carbon::now()->toDateTimeString();
-        $maxYear = date('Y');
 
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
             'idopiekuna' => ['required', 'integer'],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
@@ -134,7 +130,7 @@ class UsersController extends Controller
             'rokur' => $request->rokur,
             'klub' => $request->klub,
             'idopiekuna' => $request->idopiekuna,
-            'data' => $datetime,
+            'data' => Carbon::now()->toDateTimeString(),
             'status' => $request->status,
         ]);
 
@@ -168,15 +164,13 @@ class UsersController extends Controller
 
     public function update_learner(Request $request, $id)
     {
-        $datetime = Carbon::now()->toDateTimeString();
-        $maxYear = date('Y');
 
         $learner = Users::findOrFail($id);
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($learner->id)],
-            'rokur' => ['required', 'integer', 'between:1900,' . $maxYear],
+            'rokur' => ['required', 'integer', 'between:1900,' . $this->MaxYear()],
             'idopiekuna' => ['required', 'integer'],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
@@ -188,7 +182,7 @@ class UsersController extends Controller
             'rokur' => $request->rokur,
             'miasto' => $request->miasto,
             'klub' => $request->klub,
-            'data' => $datetime,
+            'data' => Carbon::now()->toDateTimeString(),
             'idopiekuna' => $request->idopiekuna,
             'status' => $request->status,
         ]);
