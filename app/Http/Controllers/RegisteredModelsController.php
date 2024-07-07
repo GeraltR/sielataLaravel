@@ -43,7 +43,7 @@ class RegisteredModelsController extends Controller
                 'users.miasto',
                 'users.klub',
                 'users.rokur',
-                DB::raw('IF (users.rokur >= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur < ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
+                DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
             ->where($field, $mustby, $id)
             ->orderBy('registered_models.id')
