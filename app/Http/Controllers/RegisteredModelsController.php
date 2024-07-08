@@ -17,9 +17,14 @@ class RegisteredModelsController extends Controller
         else return RegisteredModels::all();
     }
 
-    public function get_listModels(Request $request, $id)
+    public function get_listModels(Request $request, $id, $age, $name)
     {
         $maxYear = $this->maxYear();
+        $agefield = 'users.rokur';
+        $ageBegin = 1900;
+        $ageEnd = $maxYear;
+        $notAgeBegin = 0;
+        $notAgeEnd = 0;
         if ($id != 0) {
             $field = 'categories.klasa';
             $mustby = '=';
@@ -30,6 +35,42 @@ class RegisteredModelsController extends Controller
         } else {
             $field = 'users.id';
             $mustby = '>=';
+        }
+        if ($age != 0) {
+            switch ($age) {
+                    //Mlodzik
+                case 1:
+                    $ageBegin = $maxYear - 13;
+                    $ageEnd = $maxYear;
+                    break;
+                    //Junior        
+                case 2:
+                    $ageBegin = $maxYear - 18;
+                    $ageEnd  = $maxYear - 14;
+                    break;
+                    //Mlodzik i Junior        
+                case 3:
+                    $ageBegin = $maxYear - 18;
+                    $ageEnd = $maxYear;
+                    break;
+                    //Senior 
+                case 4:
+                    $ageBegin = 1900;
+                    $ageEnd = $maxYear - 19;
+                    break;
+                    //Młodzik i Senior
+                case 5:
+                    $ageBegin = 1900;
+                    $ageEnd = $maxYear;
+                    $notAgeBegin = $maxYear - 18;
+                    $notAgeEnd = $maxYear - 13;
+                    break;
+                    //Junior i Senior   
+                case 6:
+                    $ageBegin = 1900;
+                    $ageEnd = $maxYear - 13;
+                    break;
+            }
         }
         $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
             ->join('users', 'users_id', 'users.id')
@@ -46,6 +87,8 @@ class RegisteredModelsController extends Controller
                 DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
             ->where($field, $mustby, $id)
+            ->whereBetween($agefield, [$ageBegin, $ageEnd])
+            ->whereNotBetween($agefield, [$notAgeBegin, $notAgeEnd])
             ->orderBy('registered_models.id')
             ->get();
         return response()->json([
