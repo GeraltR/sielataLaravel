@@ -17,7 +17,7 @@ class RegisteredModelsController extends Controller
         else return RegisteredModels::all();
     }
 
-    public function get_listModels(Request $request, $id, $age, $name)
+    public function get_listModels(Request $request, $idclass, $id, $age, $name)
     {
         $maxYear = $this->maxYear();
         $agefield = 'users.rokur';
@@ -25,13 +25,14 @@ class RegisteredModelsController extends Controller
         $ageEnd = $maxYear;
         $notAgeBegin = 0;
         $notAgeEnd = 0;
-        if ($id != 0) {
+
+        if ($idclass != 0) {
             $field = 'categories.klasa';
             $mustby = '=';
-            if ($id == 1)
-                $id = 'K';
+            if ($idclass == 1)
+                $idclass = 'K';
             else
-                $id = 'P';
+                $idclass = 'P';
         } else {
             $field = 'users.id';
             $mustby = '>=';
@@ -86,7 +87,7 @@ class RegisteredModelsController extends Controller
                 'users.rokur',
                 DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
-            ->where($field, $mustby, $id)
+            ->where($field, $mustby, $idclass)
             ->whereBetween($agefield, [$ageBegin, $ageEnd])
             ->whereNotBetween($agefield, [$notAgeBegin, $notAgeEnd])
             ->orderBy('registered_models.id')
