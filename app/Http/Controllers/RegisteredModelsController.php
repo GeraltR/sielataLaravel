@@ -134,12 +134,58 @@ class RegisteredModelsController extends Controller
         return $last_id;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    private function setStartNumber($startId, $endId)
+    {
+
+        $max = RegisteredModels::select(DB::raw('max(konkurs) as LP'))
+            ->where('konkurs', '!=', '0')
+            ->value('LP');
+
+        if ($max === null)
+            $max = 0;
+
+        $models = RegisteredModels::whereBetween('id', [$startId, $endId])
+            ->where('konkurs', '=', '0')
+            ->orderBy('id')
+            ->get();
+
+        $lp = $max + 1;
+        foreach ($models as $a) {
+            $t = RegisteredModels::findOrFail($a['id']);
+            $t->update([
+                "konkurs" => $lp
+            ]);
+            $lp = $lp + 1;
+        }
+    }
+
+    public function print_models(Request $request, $id)
+    {
+        $maxYear = $this->maxYear();
+        $this->setStartNumber($id, $id);
+
+        $models = RegisteredModels::where('registered_models.id', $id)
+            ->join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'users_id', 'users.id')
+            ->select(
+                'registered_models.*',
+                'categories.klasa',
+                'categories.symbol',
+                'categories.nazwa as categoryName',
+                'users.imie',
+                'users.nazwisko',
+                'users.miasto',
+                'users.klub',
+                'users.rokur',
+                DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
+            )
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
     public function get_models(Request $request, $id)
     {
         $models = RegisteredModels::where('users_id', $id)
