@@ -134,7 +134,7 @@ class RegisteredModelsController extends Controller
         return $last_id;
     }
 
-    private function setStartNumber($startId, $endId)
+    private function setStartNumber($startId, $endId, $field, $mustby, $idclass)
     {
 
         $max = RegisteredModels::select(DB::raw('max(konkurs) as LP'))
@@ -144,8 +144,10 @@ class RegisteredModelsController extends Controller
         if ($max === null)
             $max = 0;
 
-        $models = RegisteredModels::whereBetween('id', [$startId, $endId])
+        $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->whereBetween('id', [$startId, $endId])
             ->where('konkurs', '=', '0')
+            ->where($field, $mustby, $idclass)
             ->orderBy('id')
             ->get();
 
@@ -162,9 +164,32 @@ class RegisteredModelsController extends Controller
     public function print_models(Request $request, $id)
     {
         $maxYear = $this->maxYear();
-        $this->setStartNumber($id, $id);
+        $pos = strPos($id, '-');
+        $posKlasa = strPos($id, 'klasa=');
+        if ($pos > 0) {
+            $startId = substr($id, 0, $pos);
+            $endId = substr($id, $pos + 1, $posKlasa - ($pos + 1));
+        } else {
+            $startId = $id;
+            $endId = $id;
+        }
+        $idclass = substr($id, $posKlasa + 6);
 
-        $models = RegisteredModels::where('registered_models.id', $id)
+        if ($idclass != 0) {
+            $field = 'categories.klasa';
+            $mustby = '=';
+            if ($idclass == 1)
+                $idclass = 'K';
+            else
+                $idclass = 'P';
+        } else {
+            $field = 'users_id';
+            $mustby = '>=';
+        }
+
+        $this->setStartNumber($startId, $endId, $field, $mustby, $idclass);
+
+        $models = RegisteredModels::whereBetween('registered_models.id', [$startId, $endId])
             ->join('categories', 'categories_id', '=', 'idkat')
             ->join('users', 'users_id', 'users.id')
             ->select(
@@ -179,6 +204,7 @@ class RegisteredModelsController extends Controller
                 'users.rokur',
                 DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
+            ->where($field, $mustby, $idclass)
             ->get();
         return response()->json([
             'status' => 200,
