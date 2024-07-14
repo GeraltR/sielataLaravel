@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum'])->get('/categories/{rok}', [CategoriesControl
 Route::middleware(['auth:sanctum'])->get('/models/{id}', [RegisteredModelsController::class, 'get_models']);
 Route::middleware(['auth:sanctum'])->get('/printmodels/{id}', [RegisteredModelsController::class, 'print_models']);
 Route::middleware(['auth:sanctum'])->get('/listModels/classfilter/{idclass}/category/{id}/age/{age}/name/{name}', [RegisteredModelsController::class, 'get_listModels']);
+Route::middleware(['auth:sanctum'])->get('/list2points/{category}/{userid}', [RegisteredModelsController::class, 'get_list2points']);
 
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum'])->post('/add_learner/{id}', [UsersController:
 Route::middleware(['auth:sanctum'])->post('/update_learner/{id}', [UsersController::class, 'update_learner']);
 Route::middleware(['auth:sanctum'])->post('/add_model', [RegisteredModelsController::class, 'store']);
 Route::middleware(['auth:sanctum'])->post('/update_model/{id}', [RegisteredModelsController::class, 'update_model']);
+Route::middleware(['auth:sanctum'])->post('/set_points/{id}/{user_id}', [RegisteredModelsController::class, 'set_points']);
 
 
 Route::middleware(['auth:sanctum'])->delete('/delete_learner/{id}', [UsersController::class, 'delete_learner']);

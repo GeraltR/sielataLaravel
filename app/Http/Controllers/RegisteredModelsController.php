@@ -98,12 +98,28 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function get_list2points(Request $request, $category, $userid)
+    {
+        $maxYear = $this->maxYear();
+        $id = auth()->user()->id;
+
+        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+            ->select('registered_models.*')
+            ->addSelect(DB::raw("DENSE_RANK() OVER (PARTITION BY categories_id ORDER BY users_id) as atelier"))
+            ->addSelect(DB::raw("(SELECT Sum(points) FROM models_ratings where models_ratings.model_id = registered_models.id and judge_id = $id) as points"))
+            ->addSelect(DB::raw("(SELECT Sum(points) FROM models_ratings where models_ratings.model_id = registered_models.id) as total"))
+            ->where('users.rokur', '<=', ($maxYear - 18))
+            ->where('categories_id', $category)
+            ->orderBy('users_id', 'asc')
+            ->orderBy('konkurs', 'asc')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
+    public function set_points(Request $request, $id, $user_id)
     {
         //
     }
