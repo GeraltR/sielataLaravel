@@ -119,11 +119,6 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
-    public function set_points(Request $request, $id, $user_id)
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
