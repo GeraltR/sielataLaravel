@@ -105,6 +105,7 @@ class RegisteredModelsController extends Controller
 
         $models = RegisteredModels::join('users', 'users_id', 'users.id')
             ->select('registered_models.*')
+            ->addSelect(DB::raw($id . ' as id_jury'))
             ->addSelect(DB::raw("DENSE_RANK() OVER (PARTITION BY categories_id ORDER BY users_id) as atelier"))
             ->addSelect(DB::raw("(SELECT points FROM models_ratings where models_ratings.model_id = registered_models.id and judge_id = $id limit 1) as points"))
             ->addSelect(DB::raw("(SELECT flaga FROM models_ratings where models_ratings.model_id = registered_models.id and judge_id = $id limit 1) as flaga"))
