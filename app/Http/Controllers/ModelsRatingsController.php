@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 class ModelsRatingsController extends Controller
 {
 
-    public function set_points(Request $request, $id, $user_id)
+    public function set_points(Request $request, $user_id)
     {
-        //
+
+        echo $request['nazwa'];
+
+        return response()->noContent();
     }
 
     /**
