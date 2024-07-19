@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ModelsRatings;
 
 class ModelsRatingsController extends Controller
 {
@@ -10,9 +13,21 @@ class ModelsRatingsController extends Controller
     public function set_points(Request $request, $user_id)
     {
 
-        echo $request['nazwa'];
+        $wynik = ModelsRatings::where('model_id', $request->model_id)
+            ->where('judge_id', $request->id_jury)
+            ->exists();
+        if (!$wynik) {
+            DB::insert(
+                'insert into models_ratings (points, flaga, model_id, judge_id) values (?, ?, ?, ?)',
+                [$request->points, $request->flaga, $request->model_id, $request->id_jury]
+            );
+            $modelresult =  DB::getPdo()->lastInsertId();
+        } else $modelresult = DB::update(
+            'update models_ratings set points = ?, flaga = ? where model_id = ? and judge_id = ?',
+            [$request->points, $request->flaga, $request->model_id, $request->id_jury]
+        );
 
-        return response()->noContent();
+        return $modelresult;
     }
 
     /**
