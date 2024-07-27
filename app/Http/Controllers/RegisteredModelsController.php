@@ -44,17 +44,17 @@ class RegisteredModelsController extends Controller
                     $ageBegin = $maxYear - 13;
                     $ageEnd = $maxYear;
                     break;
-                    //Junior        
+                    //Junior
                 case 2:
                     $ageBegin = $maxYear - 18;
                     $ageEnd  = $maxYear - 14;
                     break;
-                    //Mlodzik i Junior        
+                    //Mlodzik i Junior
                 case 3:
                     $ageBegin = $maxYear - 18;
                     $ageEnd = $maxYear;
                     break;
-                    //Senior 
+                    //Senior
                 case 4:
                     $ageBegin = 1900;
                     $ageEnd = $maxYear - 19;
@@ -66,7 +66,7 @@ class RegisteredModelsController extends Controller
                     $notAgeBegin = $maxYear - 18;
                     $notAgeEnd = $maxYear - 13;
                     break;
-                    //Junior i Senior   
+                    //Junior i Senior
                 case 6:
                     $ageBegin = 1900;
                     $ageEnd = $maxYear - 13;
@@ -119,6 +119,36 @@ class RegisteredModelsController extends Controller
             'status' => 200,
             'models' => $models
         ]);
+    }
+
+    public function get_twocategories(Request $request, $categoriesA, $categoriesB)
+    {
+        $olderYear  = $this->maxYear() - 17;
+        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+            ->select('registered_models.*')
+            ->whereIn('categories_id', [$categoriesA, $categoriesB])
+            ->where("users.rokur", '<', $olderYear)
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
+    public function connect_category(Request $request, $categoriesA, $categoriesB)
+    {
+        $olderYear  = $this->maxYear() - 17;
+        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+            ->where('categories_id', $categoriesA)
+            ->where('idparent', null)
+            ->where("users.rokur", '<', $olderYear)
+            ->update(['idparent' => $categoriesA]);
+        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+            ->where('categories_id', $categoriesA)
+            ->where('idparent', $categoriesA)
+            ->where("users.rokur", '<', $olderYear)
+            ->update(['categories_id' => $categoriesB]);
+        return 1;
     }
 
     /**
