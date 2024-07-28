@@ -17,7 +17,7 @@ class RegisteredModelsController extends Controller
         else return RegisteredModels::all();
     }
 
-    public function get_listModels(Request $request, $idclass, $id, $age, $name)
+    public function get_list_models(Request $request, $idclass, $id, $age, $name)
     {
         $maxYear = $this->maxYear();
         $agefield = 'users.rokur';
@@ -114,6 +114,31 @@ class RegisteredModelsController extends Controller
             ->where('categories_id', $category)
             ->orderBy('users_id', 'asc')
             ->orderBy('konkurs', 'asc')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
+    public function get_models_in_category(Request $request, $category)
+    {
+        $olderYear  = $this->maxYear() - 17;
+        if ($category != 0 && $category != $this->emptyCartonClass() && $category != $this->emptyPlasticClass()) {
+            $field = 'categories_id';
+            $value = $category;
+        } else {
+            $field = '1';
+            $value = '1';
+        }
+        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+            ->select('registered_models.*')
+            ->addSelect(DB::raw("(SELECT Sum(points) FROM models_ratings where models_ratings.model_id = registered_models.id) as total"))
+            ->addSelect(DB::raw("(SELECT SUM(flaga) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga"))
+            ->addSelect(DB::raw("DENSE_RANK() OVER(ORDER BY total DESC) AS place"))
+            ->addSelect(DB::raw("DENSE_RANK() OVER(ORDER BY flaga ASC) AS prefer"))
+            ->where($field, $value)
+            ->where("users.rokur", '<', $olderYear)
             ->get();
         return response()->json([
             'status' => 200,
