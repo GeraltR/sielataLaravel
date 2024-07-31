@@ -34,5 +34,9 @@ class Controller extends BaseController
         return 26;
     }
 
+    public function old_age_for_year()
+    {
+        return $this->maxYear() - 17;
+    }
     //end parameteres function
 }

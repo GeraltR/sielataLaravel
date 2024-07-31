@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RegisteredModels;
+use LDAP\Result;
 
 class RegisteredModelsController extends Controller
 {
+
 
     private function listModels($id)
     {
@@ -121,9 +123,10 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
-    public function get_models_in_category(Request $request, $category)
+    private function prepare_list_for_results($category)
     {
-        $olderYear  = $this->maxYear() - 17;
+        $olderYear = $this->old_age_for_year();
+
         if ($category != 0 && $category != $this->emptyCartonClass() && $category != $this->emptyPlasticClass()) {
             $field = 'categories_id';
             $value = $category;
@@ -140,10 +143,55 @@ class RegisteredModelsController extends Controller
             ->where($field, $value)
             ->where("users.rokur", '<', $olderYear)
             ->get();
+        return $models;
+    }
+
+    private function make_results_in_category($category)
+    {
+        //update results for every models in category
+        $result = $this->prepare_list_for_results($category);
+        foreach ($result as $key => $model) {
+            if ($model['total'] != 0) {
+                $w = RegisteredModels::where("id", $model['id'])
+                    ->update(["wynik" => $model['place']]);
+            }
+            if ($model['flaga'] != 0) {
+                $w = RegisteredModels::where("id", $model['id'])
+                    ->update(["wynik" => $model['place']]);
+            }
+        }
+        return 1;
+    }
+
+    private function are_results_in_category($category)
+    {
+        //check is some one result for model in category
+        $models = RegisteredModels::where("categories_id", $category)
+            ->where("wynik", "!=",  0)
+            ->whereNotNull("wynik")
+            ->first();
+        return $models;
+    }
+
+    public function get_models_in_category(Request $request, $category)
+    {
+        $calculate = $this->are_results_in_category($category);
+        if ($calculate === null)
+            $this->make_results_in_category($category);
+
+        $models = $this->prepare_list_for_results($category);
+
         return response()->json([
             'status' => 200,
             'models' => $models
         ]);
+    }
+
+    public function save_rating(Request $request)
+    {
+        $saveRating = RegisteredModels::where("id", $request->model_id)
+            ->update(["wynik" => $request->wynik]);
+        return 1;
     }
 
     public function get_twocategories(Request $request, $categoriesA, $categoriesB)

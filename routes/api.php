@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum'])->post('/add_learner/{id}', [UsersController:
 Route::middleware(['auth:sanctum'])->post('/update_learner/{id}', [UsersController::class, 'update_learner']);
 Route::middleware(['auth:sanctum'])->post('/add_model', [RegisteredModelsController::class, 'store']);
 Route::middleware(['auth:sanctum'])->post('/update_model/{id}', [RegisteredModelsController::class, 'update_model']);
+Route::middleware(['auth:sanctum'])->post('/saverating', [RegisteredModelsController::class, 'save_rating']);
 Route::middleware(['auth:sanctum'])->post('/connectcategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'connect_category']);
 Route::middleware(['auth:sanctum'])->post('/set_points/{user_id}', [ModelsRatingsController::class, 'set_points']);
 
