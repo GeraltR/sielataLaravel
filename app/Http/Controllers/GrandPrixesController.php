@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\GrandPrixes;
 
-class GrandPrixController extends Controller
+class GrandPrixesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,18 +37,49 @@ class GrandPrixController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nazwa' => ['required', 'string', 'max:150'],
+            'users_id' => ['required', 'integer'],
+            'categories_id' => ['required', 'integer']
+        ]);
+
+        $registered_model = GrandPrixes::create([
+            'nazwa' => $request->nazwa,
+            'producent' => $request->producent,
+            'skala' => $request->skala,
+            'users_id' => $request->users_id,
+            'categories_id' => $request->categories_id
+        ]);
+
+        $last_id = $registered_model;
+        return $last_id;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $isActiv
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function get_list_grand_prixes(Request $request, $isactiv)
     {
-        //
+        if ($isactiv != 0) {
+            $field = 'isActiv';
+            $mustby = '=';
+            $value = '1';
+        } else {
+            $field = 'id';
+            $mustby = '>';
+            $value = '0';
+        }
+        $prixes = GrandPrixes::where($field, $mustby, $value)
+            ->orderBy("id")
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'prixes' => $prixes
+        ]);
     }
 
     /**
