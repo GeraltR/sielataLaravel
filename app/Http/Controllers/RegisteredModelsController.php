@@ -75,6 +75,19 @@ class RegisteredModelsController extends Controller
                     break;
             }
         }
+
+        if ($name != '&') {
+            $fieldname = 'registered_models.nazwa';
+            $fieldnumber = 'registered_models.konkurs';
+            $mustbyname = 'like';
+            $valuename = "%$name%";
+        } else {
+            $fieldname = 'users.id';
+            $fieldnumber = 'categories_id';
+            $mustbyname = '>=';
+            $valuename = 0;
+        }
+
         $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
             ->join('users', 'users_id', 'users.id')
             ->select(
@@ -92,6 +105,10 @@ class RegisteredModelsController extends Controller
             ->where($field, $mustby, $idclass)
             ->whereBetween($agefield, [$ageBegin, $ageEnd])
             ->whereNotBetween($agefield, [$notAgeBegin, $notAgeEnd])
+            ->where(function ($query) use ($fieldname, $fieldnumber, $mustbyname, $valuename) {
+                $query->where($fieldname, $mustbyname, $valuename)
+                    ->orWhere($fieldnumber, $mustbyname, $valuename);
+            })
             ->orderBy('registered_models.id')
             ->get();
         return response()->json([
