@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GrandPrixes extends Model
+class Grands extends Model
 {
     use HasFactory;
 
-
-    public $timestamps = false;
+    //protected $table = "grands";
 
     protected $fillable = [
         'id',
-        'prix_name',
-        'information',
-        'kind',
-        'isActiv',
+        'users_id',
+        'categories_id',
+        'model_id',
+        'prixes_id'
     ];
 }

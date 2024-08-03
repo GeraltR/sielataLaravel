@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\RegisteredModelsController;
 use App\Http\Controllers\ModelsRatingsController;
 use App\Http\Controllers\GrandPrixesController;
+use App\Http\Controllers\GrandsControler;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::middleware(['auth:sanctum'])->get('/list2points/{category}/{userid}', [Re
 Route::middleware(['auth:sanctum'])->get('/twocategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'get_twocategories']);
 Route::middleware(['auth:sanctum'])->get('/ratingmodels/{category}', [RegisteredModelsController::class, 'get_models_in_category']);
 Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
+Route::middleware(['auth:sanctum'])->get('/resultgrandprixes', [GrandsControler::class, 'get_list']);
 
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
@@ -41,6 +43,7 @@ Route::middleware(['auth:sanctum'])->post('/update_model/{id}', [RegisteredModel
 Route::middleware(['auth:sanctum'])->post('/saverating', [RegisteredModelsController::class, 'save_rating']);
 Route::middleware(['auth:sanctum'])->post('/connectcategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'connect_category']);
 Route::middleware(['auth:sanctum'])->post('/set_points/{user_id}', [ModelsRatingsController::class, 'set_points']);
+Route::middleware(['auth:sanctum'])->post('/add_grand', [GrandsControler::class, 'store']);
 
 
 Route::middleware(['auth:sanctum'])->delete('/delete_learner/{id}', [UsersController::class, 'delete_learner']);
