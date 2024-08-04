@@ -61,9 +61,13 @@ class GrandsControler extends Controller
         $list_grandprixes =  Grands::join('users', 'users_id', 'users.id')
             ->join('categories', 'categories_id', 'idkat')
             ->join('registered_models', 'model_id', 'registered_models.id')
+            ->join('grand_prixes', 'prixes_id', 'grand_prixes.id')
             ->select(
                 'grands.*',
+                'grand_prixes.prix_name',
+                'grand_prixes.information',
                 'registered_models.nazwa as modelName',
+                'registered_models.konkurs',
                 'categories.klasa',
                 'categories.symbol',
                 'categories.nazwa as categoryName',

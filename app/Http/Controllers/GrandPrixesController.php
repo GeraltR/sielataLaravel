@@ -73,6 +73,7 @@ class GrandPrixesController extends Controller
             $value = '0';
         }
         $prixes = GrandPrixes::where($field, $mustby, $value)
+            ->select("grand_prixes.*", "grand_prixes.prix_name as name")
             ->orderBy("id")
             ->get();
 
