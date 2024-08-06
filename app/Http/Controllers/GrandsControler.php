@@ -120,6 +120,12 @@ class GrandsControler extends Controller
         //
     }
 
+    public function delete_result_grand_prix($id)
+    {
+        Grands::findOrFail($id)->delete();
+        return response()->noContent();
+    }
+
     /**
      * Remove the specified resource from storage.
      *
