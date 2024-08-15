@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RegisteredModels;
+use App\Models\Users;
 use LDAP\Result;
 
 class RegisteredModelsController extends Controller
@@ -17,6 +18,63 @@ class RegisteredModelsController extends Controller
         if ($id != $this->emptyCartonClass() && $id != $this->emptyPlasticClass() && $id != 0)
             return RegisteredModels::where('categories_id', $id);
         else return RegisteredModels::all();
+    }
+
+    public function get_statistics(Request $request)
+    {
+        $maxYear = $this->maxYear();
+
+        //count all models
+        $sumAllModels = RegisteredModels::count();
+
+        //count category carton
+        $sumCarton = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->where('categories.klasa', 'K')
+            ->count();
+
+        //count category plastic
+        $sumPlastic = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->where('categories.klasa', 'P')
+            ->count();
+
+        //count all users with registered models
+        $sumAllContestant = Users::whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+            ->count();
+
+        //count Senior
+        $ageBegin = 1900;
+        $ageEnd = $this->old_age_for_year();
+        $sumSenior = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+            ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+            ->count();
+
+        //count Junior
+        $ageBegin = $maxYear - 18;
+        $ageEnd = $maxYear - 14;
+        $sumJunior = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+            ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+            ->count();
+
+        //count Youngster
+        $ageBegin = $maxYear - 13;
+        $ageEnd = $maxYear;
+        $sumYoung = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+            ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+            ->count();
+
+        $wynik = array(
+            "sumAllModels" => $sumAllModels,
+            "sumAllContestant" => $sumAllContestant,
+            "sumCarton" => $sumCarton,
+            "sumPlastic" => $sumPlastic,
+            "sumSenior" => $sumSenior,
+            "sumJunior" => $sumJunior,
+            "sumYoung" => $sumYoung
+        );
+
+        return response()->json([
+            'statistics' => $wynik
+        ]);
     }
 
     public function get_list_models(Request $request, $idclass, $id, $age, $name)

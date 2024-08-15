@@ -31,6 +31,7 @@ Route::middleware(['auth:sanctum'])->get('/listModels/classfilter/{idclass}/cate
 Route::middleware(['auth:sanctum'])->get('/list2points/{category}/{userid}', [RegisteredModelsController::class, 'get_list2points']);
 Route::middleware(['auth:sanctum'])->get('/twocategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'get_twocategories']);
 Route::middleware(['auth:sanctum'])->get('/ratingmodels/{category}', [RegisteredModelsController::class, 'get_models_in_category']);
+Route::middleware(['auth:sanctum'])->get('/statistics', [RegisteredModelsController::class, 'get_statistics']);
 Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
 Route::middleware(['auth:sanctum'])->get('/resultgrandprixes', [GrandsControler::class, 'get_list']);
 
