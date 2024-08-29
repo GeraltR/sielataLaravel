@@ -43,13 +43,13 @@ class RegisteredModelsController extends Controller
 
         //count Senior
         $ageBegin = 1900;
-        $ageEnd = $this->old_age_for_year();
+        $ageEnd = $maxYear - 18;
         $sumSenior = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
             ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
             ->count();
 
         //count Junior
-        $ageBegin = $maxYear - 18;
+        $ageBegin = $maxYear - 17;
         $ageEnd = $maxYear - 14;
         $sumJunior = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
             ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
@@ -106,24 +106,24 @@ class RegisteredModelsController extends Controller
                     break;
                     //Junior
                 case 2:
-                    $ageBegin = $maxYear - 18;
+                    $ageBegin = $maxYear - 17;
                     $ageEnd  = $maxYear - 14;
                     break;
                     //Mlodzik i Junior
                 case 3:
-                    $ageBegin = $maxYear - 18;
+                    $ageBegin = $maxYear - 17;
                     $ageEnd = $maxYear;
                     break;
                     //Senior
                 case 4:
                     $ageBegin = 1900;
-                    $ageEnd = $maxYear - 19;
+                    $ageEnd = $maxYear - 18;
                     break;
                     //Młodzik i Senior
                 case 5:
                     $ageBegin = 1900;
                     $ageEnd = $maxYear;
-                    $notAgeBegin = $maxYear - 18;
+                    $notAgeBegin = $maxYear - 17;
                     $notAgeEnd = $maxYear - 13;
                     break;
                     //Junior i Senior
