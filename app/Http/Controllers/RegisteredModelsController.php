@@ -403,11 +403,27 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
+    //Geting list of models for user
     public function get_models(Request $request, $id)
     {
         $models = RegisteredModels::where('users_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
             ->select('registered_models.*', 'categories.klasa', 'categories.symbol', 'categories.nazwa as categoryName')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
+    //Geting list of rewart a models
+    public function rewart_models(Request $request)
+    {
+        $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->select('registered_models.*', 'categories.klasa', 'categories.symbol', 'categories.nazwa as categoryName')
+            ->where('wynik', '!=', '0')
+            ->orderBy('categories.grupa', 'asc')
+            ->orderBy('konkurs', 'asc')
             ->get();
         return response()->json([
             'status' => 200,
