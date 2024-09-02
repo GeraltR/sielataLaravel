@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum'])->get('/list2points/{category}/{userid}', [Re
 Route::middleware(['auth:sanctum'])->get('/twocategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'get_twocategories']);
 Route::middleware(['auth:sanctum'])->get('/ratingmodels/{category}', [RegisteredModelsController::class, 'get_models_in_category']);
 Route::middleware(['auth:sanctum'])->get('/statistics', [RegisteredModelsController::class, 'get_statistics']);
+Route::middleware(['auth:sanctum'])->get('/listregisteredteenager', [RegisteredModelsController::class, 'get_list_registered_teenager']);
 Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
 Route::middleware(['auth:sanctum'])->get('/resultgrandprixes', [GrandsControler::class, 'get_list']);
 
@@ -50,3 +51,6 @@ Route::middleware(['auth:sanctum'])->post('/add_grand', [GrandsControler::class,
 Route::middleware(['auth:sanctum'])->delete('/delete_learner/{id}', [UsersController::class, 'delete_learner']);
 Route::middleware(['auth:sanctum'])->delete('/delete_model/{id}', [RegisteredModelsController::class, 'delete_model']);
 Route::middleware(['auth:sanctum'])->delete('/delete_result_grand_prix/{id}', [GrandsControler::class, 'delete_result_grand_prix']);
+
+
+Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);
