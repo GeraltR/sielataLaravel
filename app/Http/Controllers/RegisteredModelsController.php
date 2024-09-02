@@ -77,6 +77,29 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
+    //Geting list of registered teenager
+    public function get_list_registered_teenager(Request $request)
+    {
+        $ageBegin = $this->maxYear() - 17;
+        $ageEnd = $this->maxYear();
+        $list = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+            ->select(
+                'users.id',
+                'users.imie',
+                'users.nazwisko',
+                DB::raw('"WYRÓŻNIENIE" as typeName')
+            )
+            ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+            ->orderBy('users.nazwisko', 'asc')
+            ->orderBy('users.imie', 'asc')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'users' => $list
+        ]);
+    }
+
+
     public function get_list_models(Request $request, $idclass, $id, $age, $name)
     {
         $maxYear = $this->maxYear();
@@ -406,6 +429,7 @@ class RegisteredModelsController extends Controller
     //Geting list of models for user
     public function get_models(Request $request, $id)
     {
+
         $models = RegisteredModels::where('users_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
             ->select('registered_models.*', 'categories.klasa', 'categories.symbol', 'categories.nazwa as categoryName')
@@ -416,18 +440,33 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
-    //Geting list of rewart a models
-    public function rewart_models(Request $request)
+    //Geting list of reward a models
+    public function get_reward_models(Request $request, $category_id)
     {
-        $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
-            ->select('registered_models.*', 'categories.klasa', 'categories.symbol', 'categories.nazwa as categoryName')
+        if ($category_id == 0 || $category_id == $this->emptyCartonClass() || $category_id == $this->emptyPlasticClass())
+            $mustby = '!=';
+        else
+            $mustby = '=';
+        $rewards = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'users_id', 'users.id')
+            ->select(
+                'registered_models.*',
+                'categories.klasa',
+                'categories.symbol',
+                'categories.nazwa as categoryName',
+                'users.imie',
+                'users.nazwisko',
+                DB::raw('IF (registered_models.wynik < 4, "DYPLOM", "WYRÓŻNIENIE") as typeName'),
+                DB::raw('IF (registered_models.wynik = 1, "pierwsze", IF(registered_models.wynik = 2, "drugie", IF(registered_models.wynik = 3, "trzecie", ""))) as place')
+            )
             ->where('wynik', '!=', '0')
+            ->where('categories_id', $mustby, $category_id)
             ->orderBy('categories.grupa', 'asc')
-            ->orderBy('konkurs', 'asc')
+            ->orderBy('wynik', 'asc')
             ->get();
         return response()->json([
             'status' => 200,
-            'models' => $models
+            'rewards' => $rewards
         ]);
     }
 
