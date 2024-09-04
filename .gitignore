@@ -23,4 +23,4 @@ bootstrap/cache/services.php
 .env.production
 /sielata
 /bootstrap/cache
-/database/seeders/DatabaseSeeder.php
+/database/seeders
