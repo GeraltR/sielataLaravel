@@ -67,6 +67,23 @@ class UsersController extends Controller
         $user = Users::where();
     }
 
+    public function short_update(Request $request, $id)
+    {
+
+        $user = Users::findOrFail($id);
+
+        $user->update([
+            'imie' => $request->imie,
+            'nazwisko' => $request->nazwisko,
+            'email' => $request->email,
+            'miasto' => $request->miasto,
+            'rokur' => $request->rokur,
+            'klub' => $request->klub,
+            'admin' => $request->admin,
+        ]);
+        return $id;
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -189,5 +206,20 @@ class UsersController extends Controller
         if ($request->status != 2)
             $learner->update(['email' => $request->email]);
         return $id;
+    }
+
+    //Geting users with registered models
+    public function get_users_with_registered_models(Request $request, $find)
+    {
+        $list = Users::whereRaw('users.nazwisko like "%' . $find . '%"')
+            ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+            ->orderBy('users.nazwisko', 'asc')
+            ->orderBy('users.imie', 'asc')
+            ->orderBy('users.data', 'desc')
+            ->get();
+        return response()->json([
+            'status' => 200,
+            'users' => $list
+        ]);
     }
 }
