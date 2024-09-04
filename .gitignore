@@ -24,3 +24,4 @@ bootstrap/cache/services.php
 /sielata
 /bootstrap/cache
 database/seeders/DatabaseSeeder.php
+database/seeders/DatabaseSeeder.php
