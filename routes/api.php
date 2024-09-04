@@ -24,6 +24,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware(['auth:sanctum'])->get('/learners/{id}', [UsersController::class, 'get_learners']);
+Route::middleware(['auth:sanctum'])->get('/finduser/{find}', [UsersController::class, 'get_users_with_registered_models']);
 Route::middleware(['auth:sanctum'])->get('/categories/{rok}', [CategoriesController::class, 'get_categories']);
 Route::middleware(['auth:sanctum'])->get('/models/{id}', [RegisteredModelsController::class, 'get_models']);
 Route::middleware(['auth:sanctum'])->get('/printmodels/{id}', [RegisteredModelsController::class, 'print_models']);
@@ -34,9 +35,10 @@ Route::middleware(['auth:sanctum'])->get('/ratingmodels/{category}', [Registered
 Route::middleware(['auth:sanctum'])->get('/statistics', [RegisteredModelsController::class, 'get_statistics']);
 Route::middleware(['auth:sanctum'])->get('/listregisteredteenager', [RegisteredModelsController::class, 'get_list_registered_teenager']);
 Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
-Route::middleware(['auth:sanctum'])->get('/resultgrandprixes', [GrandsControler::class, 'get_list']);
+
 
 Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
+Route::middleware(['auth:sanctum'])->post('/shortupdate_user/{id}', [UsersController::class, 'short_update']);
 Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
 Route::middleware(['auth:sanctum'])->post('/add_learner/{id}', [UsersController::class, 'add_learner']);
 Route::middleware(['auth:sanctum'])->post('/update_learner/{id}', [UsersController::class, 'update_learner']);
@@ -53,4 +55,5 @@ Route::middleware(['auth:sanctum'])->delete('/delete_model/{id}', [RegisteredMod
 Route::middleware(['auth:sanctum'])->delete('/delete_result_grand_prix/{id}', [GrandsControler::class, 'delete_result_grand_prix']);
 
 
+Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
 Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);

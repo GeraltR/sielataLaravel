@@ -54,9 +54,18 @@ class GrandsControler extends Controller
         return $last_id;
     }
 
-    public function get_list(Request $response)
+    public function get_list(Request $response, $order)
     {
         $maxYear = $this->maxYear();
+
+        if ($order == 0) {
+            $direct = 'DESC';
+            $order_field = 'grands.id';
+        } else {
+            $direct = 'ASC';
+            $order_field = 'grand_prixes.id';
+        }
+
 
         $list_grandprixes =  Grands::join('users', 'users_id', 'users.id')
             ->join('categories', 'categories_id', 'idkat')
@@ -78,7 +87,7 @@ class GrandsControler extends Controller
                 'users.rokur',
                 DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
-            ->orderBy('grands.id', 'DESC')
+            ->orderBy($order_field, $direct)
             ->get();
         return response()->json([
             'status' => 200,

@@ -443,6 +443,12 @@ class RegisteredModelsController extends Controller
     //Geting list of reward a models
     public function get_reward_models(Request $request, $category_id)
     {
+        try {
+            $isAdmin = auth()->user()->admin;
+        } catch (\Throwable $th) {
+            $isAdmin = 0;
+        }
+
         if ($category_id == 0 || $category_id == $this->emptyCartonClass() || $category_id == $this->emptyPlasticClass())
             $mustby = '!=';
         else
@@ -457,7 +463,7 @@ class RegisteredModelsController extends Controller
                 'users.imie',
                 'users.nazwisko',
                 DB::raw('IF (registered_models.wynik < 4, "DYPLOM", "WYRÓŻNIENIE") as typeName'),
-                DB::raw('IF (registered_models.wynik = 1, "pierwsze", IF(registered_models.wynik = 2, "drugie", IF(registered_models.wynik = 3, "trzecie", ""))) as place')
+                DB::raw('IF (registered_models.wynik = 1, "pierwsze", IF(registered_models.wynik = 2, "drugie", IF(registered_models.wynik = 3, "trzecie", "wyróżnienie"))) as place')
             )
             ->where('wynik', '!=', '0')
             ->where('categories_id', $mustby, $category_id)
@@ -466,7 +472,8 @@ class RegisteredModelsController extends Controller
             ->get();
         return response()->json([
             'status' => 200,
-            'rewards' => $rewards
+            'rewards' => $rewards,
+            'isadmin' => $isAdmin
         ]);
     }
 
