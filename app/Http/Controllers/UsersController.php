@@ -212,7 +212,6 @@ class UsersController extends Controller
     public function get_users_with_registered_models(Request $request, $find)
     {
         $list = Users::whereRaw('users.nazwisko like "%' . $find . '%"')
-            ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
             ->orderBy('users.nazwisko', 'asc')
             ->orderBy('users.imie', 'asc')
             ->orderBy('users.data', 'desc')

@@ -234,8 +234,8 @@ class RegisteredModelsController extends Controller
         }
         $models = RegisteredModels::join('users', 'users_id', 'users.id')
             ->select('registered_models.*', 'users.imie', 'users.nazwisko')
-            ->addSelect(DB::raw("(SELECT Sum(points) FROM models_ratings where models_ratings.model_id = registered_models.id) as total"))
-            ->addSelect(DB::raw("(SELECT SUM(flaga) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga"))
+            ->addSelect(DB::raw("(SELECT IFNULL(Sum(points), 0) FROM models_ratings where models_ratings.model_id = registered_models.id) as total"))
+            ->addSelect(DB::raw("(SELECT IFNULL(SUM(flaga), 0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga"))
             ->addSelect(DB::raw("DENSE_RANK() OVER(ORDER BY total DESC) AS place"))
             ->addSelect(DB::raw("DENSE_RANK() OVER(ORDER BY flaga ASC) AS prefer"))
             ->where($field, $value)
