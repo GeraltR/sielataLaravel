@@ -9,20 +9,12 @@ use App\Http\Controllers\ModelsRatingsController;
 use App\Http\Controllers\GrandPrixesController;
 use App\Http\Controllers\GrandsControler;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+use App\Http\Controllers\API\RegisterController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::middleware(['auth:sanctum'])->get('/learners/{id}', [UsersController::class, 'get_learners']);
 Route::middleware(['auth:sanctum'])->get('/finduser/{find}', [UsersController::class, 'get_users_with_registered_models']);
 Route::middleware(['auth:sanctum'])->get('/categories/{rok}', [CategoriesController::class, 'get_categories']);

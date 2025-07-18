@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\RegisteredModels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -64,13 +64,13 @@ class UsersController extends Controller
      */
     public function find($find)
     {
-        $user = Users::where();
+        $user = User::where();
     }
 
     public function short_update(Request $request, $id)
     {
 
-        $user = Users::findOrFail($id);
+        $user = User::findOrFail($id);
 
         $user->update([
             'imie' => $request->imie,
@@ -94,7 +94,7 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
 
-        $user = Users::findOrFail($id);
+        $user = User::findOrFail($id);
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
@@ -122,7 +122,7 @@ class UsersController extends Controller
 
     public function change_teacher(Request $request, $id)
     {
-        $user = Users::findOrFail($id)->update(['isteacher' => $request->isteacher]);
+        $user = User::findOrFail($id)->update(['isteacher' => $request->isteacher]);
         return 'isteacher ' . $id;
     }
 
@@ -138,7 +138,7 @@ class UsersController extends Controller
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
-        $learner = Users::create([
+        $learner = User::create([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'email' => $request->email,
@@ -160,7 +160,7 @@ class UsersController extends Controller
 
         $idopiekuna = auth()->user()->id;
         if ($idopiekuna) {
-            $learners = Users::where('idopiekuna', $id)->get();
+            $learners = User::where('idopiekuna', $id)->get();
             return  response()->json([
                 'status' => 200,
                 'learners' => $learners
@@ -175,14 +175,14 @@ class UsersController extends Controller
     {
         $model = RegisteredModels::where('users_id', '=', $id)->first();
         if (!$model)
-            Users::findOrFail($id)->delete();
+            User::findOrFail($id)->delete();
         return response()->noContent();
     }
 
     public function update_learner(Request $request, $id)
     {
 
-        $learner = Users::findOrFail($id);
+        $learner = User::findOrFail($id);
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
@@ -211,7 +211,7 @@ class UsersController extends Controller
     //Geting users with registered models
     public function get_users_with_registered_models(Request $request, $find)
     {
-        $list = Users::whereRaw('users.nazwisko like "%' . $find . '%"')
+        $list = User::whereRaw('users.nazwisko like "%' . $find . '%"')
             ->orderBy('users.nazwisko', 'asc')
             ->orderBy('users.imie', 'asc')
             ->orderBy('users.data', 'desc')

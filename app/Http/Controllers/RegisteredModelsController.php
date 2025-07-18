@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RegisteredModels;
-use App\Models\Users;
+use App\Models\User;
 use LDAP\Result;
 
 class RegisteredModelsController extends Controller
@@ -38,27 +38,27 @@ class RegisteredModelsController extends Controller
             ->count();
 
         //count all users with registered models
-        $sumAllContestant = Users::whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
+        $sumAllContestant = User::whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
             ->count();
 
         //count Senior
         $ageBegin = 1900;
         $ageEnd = $maxYear - 18;
-        $sumSenior = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+        $sumSenior = User::whereBetween('users.rokur', [$ageBegin, $ageEnd])
             ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
             ->count();
 
         //count Junior
         $ageBegin = $maxYear - 17;
         $ageEnd = $maxYear - 14;
-        $sumJunior = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+        $sumJunior = User::whereBetween('users.rokur', [$ageBegin, $ageEnd])
             ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
             ->count();
 
         //count Youngster
         $ageBegin = $maxYear - 13;
         $ageEnd = $maxYear;
-        $sumYoung = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+        $sumYoung = User::whereBetween('users.rokur', [$ageBegin, $ageEnd])
             ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
             ->count();
 
@@ -82,7 +82,7 @@ class RegisteredModelsController extends Controller
     {
         $ageBegin = $this->maxYear() - 17;
         $ageEnd = $this->maxYear();
-        $list = Users::whereBetween('users.rokur', [$ageBegin, $ageEnd])
+        $list = User::whereBetween('users.rokur', [$ageBegin, $ageEnd])
             ->select(
                 'users.id',
                 'users.imie',
@@ -487,7 +487,7 @@ class RegisteredModelsController extends Controller
     {
         $list = RegisteredModelsDB::where('categories_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
-            ->join('users', 'user_id', '=', 'id')
+            ->join('users', 'users_id', '=', 'id')
             ->select(
                 'registered_models.*',
                 'categories.klasa',

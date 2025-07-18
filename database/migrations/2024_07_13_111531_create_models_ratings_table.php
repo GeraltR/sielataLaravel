@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\RegisteredModels;
-use App\Models\Users;
+use App\Models\User;
 
 class CreateModelsRatingsTable extends Migration
 {
@@ -20,7 +20,7 @@ class CreateModelsRatingsTable extends Migration
             $table->tinyInteger('points')->unsigned();
             $table->tinyInteger('flaga')->unsigned();
             $table->foreignIdFor(RegisteredModels::class, 'model_id');
-            $table->foreignIdFor(Users::class, 'judge_id');
+            $table->foreignIdFor(User::class, 'judge_id');
         });
     }
 

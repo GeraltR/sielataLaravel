@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Categories;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,7 +24,7 @@ class CreateRegisteredModelsTable extends Migration
             $table->integer('konkurs')->unsigned()->default(0);
             $table->tinyInteger('wynik')->unsigned()->default(0);
             $table->integer('idparent')->unsigned()->nullable();
-            $table->foreignIdFor(Users::class);
+            $table->foreignIdFor(User::class);
             $table->foreignIdFor(Categories::class);
         });
     }
