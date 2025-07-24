@@ -30,3 +30,10 @@ artisan
 composer.json
 composer.lock
 .editorconfig
+composer.json
+composer.json
+composer.lock
+storage/logs/laravel.log
+composer.json
+composer.lock
+public/phpinfo.php
