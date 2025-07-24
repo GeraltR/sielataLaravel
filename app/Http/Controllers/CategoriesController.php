@@ -21,7 +21,7 @@ class CategoriesController extends Controller
 
     public function get_categories(Request $request, $year)
     {
-        $category = Categories::where('rok', '=', $year)->get();
+        $category = Categories::where('rok', '=', $year)->orderBy('klasa','asc')->orderBy('symbol', 'asc')->get();
         return response()->json([
             "status" => 200,
             "categories" => $category
