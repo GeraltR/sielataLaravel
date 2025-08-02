@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\RegisteredModels;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
@@ -14,8 +15,7 @@ use Carbon\Carbon;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
+    /* Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -51,9 +51,14 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function get_user(Request $request, $id)
     {
-        //
+        $user = User::where ('id', $id)->get();
+        $request->session()->regenerate();
+        return  response()->json([
+            'status' => 200,
+            'user' => $user
+        ]);
     }
 
     /**
@@ -93,7 +98,6 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $user = User::findOrFail($id);
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
@@ -104,7 +108,7 @@ class UsersController extends Controller
             'miasto' => ['required', 'string', 'max:255'],
         ]);
 
-        $user->update([
+        Auth::user()->update([
             'imie' => $request->imie,
             'nazwisko' => $request->nazwisko,
             'email' => $request->email,
@@ -113,11 +117,14 @@ class UsersController extends Controller
             'rokur' => $request->rokur,
             'klub' => $request->klub,
             'data' => Carbon::now()->toDateTimeString(),
-            'admin' => 0,
+            'admin' => $request->admin,
             'idopiekuna' => $request->idopiekuna,
             'isteacher' => $request->isteacher,
         ]);
-        return $id;
+               
+        $request->session()->regenerate(); 
+ 
+        return response()->noContent();
     }
 
     public function change_teacher(Request $request, $id)
