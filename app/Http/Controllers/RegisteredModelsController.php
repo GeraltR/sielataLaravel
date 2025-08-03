@@ -7,20 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RegisteredModels;
 use App\Models\User;
-use LDAP\Result;
 
 class RegisteredModelsController extends Controller
 {
 
-
-    private function listModels($id)
-    {
-        if ($id != $this->emptyCartonClass() && $id != $this->emptyPlasticClass() && $id != 0)
-            return RegisteredModels::where('categories_id', $id);
-        else return RegisteredModels::all();
-    }
-
-    public function get_statistics(Request $request)
+    public function get_statistics()
     {
         $maxYear = $this->maxYear();
 
@@ -78,7 +69,7 @@ class RegisteredModelsController extends Controller
     }
 
     //Geting list of registered teenager
-    public function get_list_registered_teenager(Request $request)
+    public function get_list_registered_teenager()
     {
         $ageBegin = $this->maxYear() - 17;
         $ageEnd = $this->maxYear();
@@ -100,7 +91,7 @@ class RegisteredModelsController extends Controller
     }
 
 
-    public function get_list_models(Request $request, $idclass, $id, $age, $name)
+    public function get_list_models($idclass, $id, $age, $name)
     {
         $maxYear = $this->maxYear();
         $agefield = 'users.rokur';
@@ -198,7 +189,7 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
-    public function get_list2points(Request $request, $category, $userid)
+    public function get_list2points($category, $userid)
     {
         $maxYear = $this->maxYear();
         $id = auth()->user()->id;
@@ -221,6 +212,20 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
+    /*This is the final of the sql sentence
+        WITH model_points AS 
+        (SELECT registered_models.*, 
+                users.imie, 
+                users.nazwisko, 
+                (SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) AS total,
+                (SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga 
+        FROM registered_models INNER JOIN users ON users_id = users.id 
+        WHERE categories_id = 23 AND users.rokur < 2008 ) 
+        SELECT *, 
+               DENSE_RANK() OVER (ORDER BY total DESC) AS place, 
+               DENSE_RANK() OVER (ORDER BY flaga ASC) AS prefer 
+        FROM model_points; 
+    */
     private function prepare_list_for_results($category)
     {
         $olderYear = $this->old_age_for_year();
@@ -232,15 +237,23 @@ class RegisteredModelsController extends Controller
             $field = '1';
             $value = '1';
         }
-        $models = RegisteredModels::join('users', 'users_id', 'users.id')
-            ->select('registered_models.*', 'users.imie', 'users.nazwisko')
-            ->addSelect(DB::raw("(SELECT IFNULL(Sum(points), 0) FROM models_ratings where models_ratings.model_id = registered_models.id) as total"))
-            ->addSelect(DB::raw("(SELECT IFNULL(SUM(flaga), 0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga"))
-            ->addSelect(DB::raw("DENSE_RANK() OVER(ORDER BY total DESC) AS place"))
-            ->addSelect(DB::raw("DENSE_RANK() OVER(ORDER BY flaga ASC) AS prefer"))
-            ->where($field, $value)
-            ->where("users.rokur", '<', $olderYear)
-            ->get();
+        $subQuery = DB::table('registered_models')
+                    ->select(
+                        'registered_models.*',
+                        'users.imie',
+                        'users.nazwisko',
+                        DB::raw('(SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) as total'),
+                        DB::raw('(SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) as flaga')
+                    )
+                    ->join('users', 'registered_models.users_id', '=', 'users.id')
+                    ->where($field, '=', $value)
+                    ->where('users.rokur', '<', $olderYear);
+
+        $models = DB::table(DB::raw("({$subQuery->toSql()}) as model_points"))
+                  ->mergeBindings($subQuery) // ważne aby przekazać bindings
+                  ->selectRaw('*, DENSE_RANK() OVER(ORDER BY total DESC) as place, DENSE_RANK() OVER(ORDER BY flaga ASC) as prefer')
+                  ->get();
+
         return $models;
     }
 
@@ -271,7 +284,7 @@ class RegisteredModelsController extends Controller
         return $models;
     }
 
-    public function get_models_in_category(Request $request, $category)
+    public function get_models_in_category($category)
     {
         $calculate = $this->are_results_in_category($category);
         if ($calculate === null)
@@ -292,7 +305,7 @@ class RegisteredModelsController extends Controller
         return 1;
     }
 
-    public function get_twocategories(Request $request, $categoriesA, $categoriesB)
+    public function get_twocategories($categoriesA, $categoriesB)
     {
         $olderYear  = $this->maxYear() - 17;
         $models = RegisteredModels::join('users', 'users_id', 'users.id')
@@ -306,7 +319,7 @@ class RegisteredModelsController extends Controller
         ]);
     }
 
-    public function connect_category(Request $request, $categoriesA, $categoriesB)
+    public function connect_category($categoriesA, $categoriesB)
     {
         $olderYear  = $this->maxYear() - 17;
         $models = RegisteredModels::join('users', 'users_id', 'users.id')
@@ -350,7 +363,6 @@ class RegisteredModelsController extends Controller
 
     private function setStartNumber($startId, $endId, $field, $mustby, $idclass)
     {
-
         $max = RegisteredModels::select(DB::raw('max(konkurs) as LP'))
             ->where('konkurs', '!=', '0')
             ->value('LP');
@@ -375,7 +387,7 @@ class RegisteredModelsController extends Controller
         }
     }
 
-    public function print_models(Request $request, $id)
+    public function print_models($id)
     {
         $maxYear = $this->maxYear();
         $pos = strPos($id, '-');
@@ -427,9 +439,8 @@ class RegisteredModelsController extends Controller
     }
 
     //Geting list of models for user
-    public function get_models(Request $request, $id)
+    public function get_models($id)
     {
-
         $models = RegisteredModels::where('users_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
             ->select('registered_models.*', 'categories.klasa', 'categories.symbol', 'categories.nazwa as categoryName')
@@ -441,7 +452,7 @@ class RegisteredModelsController extends Controller
     }
 
     //Geting list of reward a models
-    public function get_reward_models(Request $request, $category_id)
+    public function get_reward_models($category_id)
     {
         try {
             $isAdmin = auth()->user()->admin;
@@ -530,20 +541,9 @@ class RegisteredModelsController extends Controller
         return $id;
     }
 
-    public function delete_model(Request $request, $id)
+    public function delete_model($id)
     {
         RegisteredModels::findOrFail($id)->delete();
         return response()->noContent();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
