@@ -200,7 +200,7 @@ class RegisteredModelsController extends Controller
             ->addSelect(DB::raw("DENSE_RANK() OVER (PARTITION BY categories_id ORDER BY users_id) as atelier"))
             ->addSelect(DB::raw("(SELECT points FROM models_ratings where models_ratings.model_id = registered_models.id and judge_id = $id limit 1) as points"))
             ->addSelect(DB::raw("(SELECT flaga FROM models_ratings where models_ratings.model_id = registered_models.id and judge_id = $id limit 1) as flaga"))
-            ->addSelect(DB::raw("(SELECT Sum(points) FROM models_ratings where models_ratings.model_id = registered_models.id) as total"))
+            ->addSelect(DB::raw("(SELECT Sum(points) FROM models_ratings where models_ratings.model_id = registered_models.id) as total_points"))
             ->where('users.rokur', '<=', ($maxYear - 18))
             ->where('categories_id', $category)
             ->orderBy('users_id', 'asc')
@@ -213,18 +213,18 @@ class RegisteredModelsController extends Controller
     }
 
     /*This is the final of the sql sentence
-        WITH model_points AS 
-        (SELECT registered_models.*, 
+        WITH model_points AS ( 
+            SELECT registered_models.*, 
                 users.imie, 
                 users.nazwisko, 
-                (SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) AS total,
-                (SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga 
-        FROM registered_models INNER JOIN users ON users_id = users.id 
-        WHERE categories_id = 23 AND users.rokur < 2008 ) 
-        SELECT *, 
-               DENSE_RANK() OVER (ORDER BY total DESC) AS place, 
-               DENSE_RANK() OVER (ORDER BY flaga ASC) AS prefer 
-        FROM model_points; 
+                (SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) AS total_points, 
+                (SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) AS flaga
+            FROM registered_models INNER JOIN users ON users_id = users.id 
+            WHERE categories_id = 23 AND users.rokur < 2008)
+            SELECT *, 
+                IF(total_points != 0, DENSE_RANK() OVER (ORDER BY total_points DESC), 0) AS place, 
+                IF(flaga < total_points, DENSE_RANK() OVER (ORDER BY total_points DESC), DENSE_RANK() OVER (ORDER BY flaga ASC)+4) AS prefer 
+            FROM model_points;  
     */
     private function prepare_list_for_results($category)
     {
@@ -242,7 +242,7 @@ class RegisteredModelsController extends Controller
                         'registered_models.*',
                         'users.imie',
                         'users.nazwisko',
-                        DB::raw('(SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) as total'),
+                        DB::raw('(SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) as total_points'),
                         DB::raw('(SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) as flaga')
                     )
                     ->join('users', 'registered_models.users_id', '=', 'users.id')
@@ -251,7 +251,10 @@ class RegisteredModelsController extends Controller
 
         $models = DB::table(DB::raw("({$subQuery->toSql()}) as model_points"))
                   ->mergeBindings($subQuery) // ważne aby przekazać bindings
-                  ->selectRaw('*, DENSE_RANK() OVER(ORDER BY total DESC) as place, DENSE_RANK() OVER(ORDER BY flaga ASC) as prefer')
+                  ->selectRaw('*, 
+                    IF (total_points != 0, DENSE_RANK() OVER(ORDER BY total_points DESC), 0) as place, 
+                    IF (flaga < total_points, DENSE_RANK() OVER (ORDER BY total_points DESC), 
+                              DENSE_RANK() OVER (ORDER BY flaga ASC)+4) AS prefer')
                   ->get();
 
         return $models;
@@ -262,13 +265,13 @@ class RegisteredModelsController extends Controller
         //update results for every models in category
         $result = $this->prepare_list_for_results($category);
         foreach ($result as $key => $model) {
-            if ($model['total'] != 0) {
-                $w = RegisteredModels::where("id", $model['id'])
-                    ->update(["wynik" => $model['place']]);
+            if ($model->total_points != 0) {
+                RegisteredModels::where("id", $model->id)
+                    ->update(["wynik" => $model->place]);
             }
-            if ($model['flaga'] != 0) {
-                $w = RegisteredModels::where("id", $model['id'])
-                    ->update(["wynik" => $model['place']]);
+            if ($model->flaga != 0) {
+                RegisteredModels::where("id", $model->id)
+                    ->update(["wynik" => $model->place]);
             }
         }
         return 1;
@@ -300,7 +303,7 @@ class RegisteredModelsController extends Controller
 
     public function save_rating(Request $request)
     {
-        $saveRating = RegisteredModels::where("id", $request->model_id)
+        RegisteredModels::where("id", $request->model_id)
             ->update(["wynik" => $request->wynik]);
         return 1;
     }
@@ -322,12 +325,12 @@ class RegisteredModelsController extends Controller
     public function connect_category($categoriesA, $categoriesB)
     {
         $olderYear  = $this->maxYear() - 17;
-        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+        RegisteredModels::join('users', 'users_id', 'users.id')
             ->where('categories_id', $categoriesA)
             ->where('idparent', null)
             ->where("users.rokur", '<', $olderYear)
             ->update(['idparent' => $categoriesA]);
-        $models = RegisteredModels::join('users', 'users_id', 'users.id')
+        RegisteredModels::join('users', 'users_id', 'users.id')
             ->where('categories_id', $categoriesA)
             ->where('idparent', $categoriesA)
             ->where("users.rokur", '<', $olderYear)
