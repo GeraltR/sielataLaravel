@@ -37,3 +37,5 @@ storage/logs/laravel.log
 composer.json
 composer.lock
 public/phpinfo.php
+storage/framework/views/
+sielataReact/
