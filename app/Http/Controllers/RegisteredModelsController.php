@@ -481,6 +481,8 @@ class RegisteredModelsController extends Controller
             )
             ->where('wynik', '!=', '0')
             ->where('categories_id', $mustby, $category_id)
+            ->orderBy('users.nazwisko', 'asc')
+            ->orderBy('users.imie', 'asc')  
             ->orderBy('categories.grupa', 'asc')
             ->orderBy('wynik', 'asc')
             ->get();
