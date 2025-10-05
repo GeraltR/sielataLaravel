@@ -37,3 +37,12 @@ storage/logs/laravel.log
 composer.json
 composer.lock
 public/phpinfo.php
+.bash_profile
+storage/framework/views/*.php
+storage/debugbar
+storage/logs
+storage/framework/cache/data
+storage/framework/sessions
+storage/framework/testing
+/storage/*.key
+/storage/pail
