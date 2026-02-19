@@ -46,3 +46,4 @@ storage/framework/sessions
 storage/framework/testing
 /storage/*.key
 /storage/pail
+docker/8.4/php.ini
