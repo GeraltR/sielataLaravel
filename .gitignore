@@ -47,3 +47,12 @@ storage/framework/testing
 /storage/*.key
 /storage/pail
 docker/8.4/php.ini
+/resources/views/vendor/filament-panels/*
+!/resources/views/vendor/filament-panels/components/
+/resources/views/vendor/filament-panels/components/*
+!/resources/views/vendor/filament-panels/components/header/
+/resources/views/vendor/filament-panels/components/header/*
+!/resources/views/vendor/filament-panels/components/header/simple.blade.php
+/public/css/*
+/public/fonts/*
+/public/js/*
