@@ -56,3 +56,4 @@ docker/8.4/php.ini
 /public/css/*
 /public/fonts/*
 /public/js/*
+/storage/app/public/*

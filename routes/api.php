@@ -8,8 +8,9 @@ use App\Http\Controllers\RegisteredModelsController;
 use App\Http\Controllers\ModelsRatingsController;
 use App\Http\Controllers\GrandPrixesController;
 use App\Http\Controllers\GrandsControler;
-
-use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\Api\FestivalController;
+use App\Http\Controllers\Api\FestivalTopicController;
+use App\Http\Controllers\Api\SponsorController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -49,3 +50,7 @@ Route::middleware(['auth:sanctum'])->delete('/delete_result_grand_prix/{id}', [G
 
 Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
 Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);
+
+Route::get('/festival/current', [FestivalController::class, 'current']);
+Route::get('/festival/current/topics', [FestivalTopicController::class, 'current']);
+Route::get('/sponsors', [SponsorController::class, 'index']);
