@@ -7,6 +7,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
 use App\Models\Sponsor;
 
 class SponsorForm
@@ -21,7 +22,16 @@ class SponsorForm
                             ->label('Nazwa')
                             ->required()
                             ->maxLength(150),
-
+                        Select::make('category')
+                            ->label('Kategoria')
+                            ->options([
+                                'gold'    => '🥇 Złoty',
+                                'silver'  => '🥈 Srebrny',
+                                'partner' => '🤝 Partner',
+                                'media'   => '📺 Patron medialny',
+                            ])
+                            ->default('partner')
+                            ->required(),
                         FileUpload::make('logo')
                             ->label('Logo')
                             ->image()
@@ -36,7 +46,7 @@ class SponsorForm
                         TextInput::make('order')
                             ->label('Kolejność')
                             ->numeric()
-                            ->default(fn () => (Sponsor::max('order') ?? 0) + 1),
+                            ->default(fn() => (Sponsor::max('order') ?? 0) + 1),
 
                         Toggle::make('active')
                             ->label('Aktywny')

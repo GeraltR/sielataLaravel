@@ -14,6 +14,7 @@ class Sponsor extends Model
 
     protected $fillable = [
         'name',
+        'category',
         'logo',
         'url',
         'order',

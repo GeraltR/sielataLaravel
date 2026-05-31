@@ -36,6 +36,8 @@ class FestivalTopicController extends Controller
                         : null,
 
                     'order' => $topic->order,
+                    'anniversary_value' => $topic->anniversary_value,
+                    'anniversary_period' => $topic->anniversary_period,
                 ];
             })
         );

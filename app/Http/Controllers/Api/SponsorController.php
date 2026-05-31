@@ -20,6 +20,8 @@ class SponsorController extends Controller
 
                     'name' => $sponsor->name,
 
+                    'category' => $sponsor->category,
+
                     'logo' => $sponsor->logo
                         ? asset('storage/' . $sponsor->logo)
                         : null,
