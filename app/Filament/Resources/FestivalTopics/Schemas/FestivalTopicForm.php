@@ -27,7 +27,10 @@ class FestivalTopicForm
                             )
                             ->searchable()
                             ->required(),
-
+                        TextInput::make('anniversary_value')
+                        ->label('Rocznica'),
+                        TextInput::make('anniversary_period')
+                        ->label('okres'),
                         TextInput::make('title')
                             ->label('Tytuł')
                             ->required()

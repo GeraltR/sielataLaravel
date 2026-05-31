@@ -107,14 +107,14 @@ services:
             - sail
         environment:
             - PMA_ARBITRARY=1
-    sielata:
-        image: nginx:alpine
-        volumes:
-            - ../sielata:/usr/share/nginx/html:ro
-        ports:
-            - 5174:80
-        networks:
-            - sail
+    # sielata:
+    #     image: nginx:alpine
+    #     volumes:
+    #         - ../sielata:/usr/share/nginx/html:ro
+    #     ports:
+    #         - 5174:80
+    #     networks:
+    #         - sail
 
     pogoda-php:
         image: php:8.2-fpm

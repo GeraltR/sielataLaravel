@@ -18,7 +18,6 @@ class FestivalEditionsTable
                 TextColumn::make('edition')
                     ->label('Edycja')
                     ->sortable(),
-
                 TextColumn::make('title')
                     ->label('Tytuł')
                     ->searchable(),

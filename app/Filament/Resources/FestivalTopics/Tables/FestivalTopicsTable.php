@@ -19,6 +19,11 @@ class FestivalTopicsTable
                 TextColumn::make('festival_edition_id')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('anniversary_value')
+                    ->label('Rocznica')
+                    ->sortable(),
+                TextColumn::make('anniversary_period')
+                    ->label('okres'),    
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('subtitle')

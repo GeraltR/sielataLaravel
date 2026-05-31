@@ -15,6 +15,8 @@ class FestivalTopic extends Model
 
     protected $fillable = [
         'festival_edition_id',
+        'anniversary_value',
+        'anniversary_period',
         'title',
         'subtitle',
         'description',

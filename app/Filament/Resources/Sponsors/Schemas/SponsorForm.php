@@ -7,6 +7,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Section;
+use App\Models\Sponsor;
 
 class SponsorForm
 {
@@ -27,7 +28,6 @@ class SponsorForm
                             ->disk('public')
                             ->directory('sponsors')
                             ->imageEditor(),
-
                         TextInput::make('url')
                             ->label('Adres strony')
                             ->url()
@@ -36,7 +36,7 @@ class SponsorForm
                         TextInput::make('order')
                             ->label('Kolejność')
                             ->numeric()
-                            ->default(0),
+                            ->default(fn () => (Sponsor::max('order') ?? 0) + 1),
 
                         Toggle::make('active')
                             ->label('Aktywny')
