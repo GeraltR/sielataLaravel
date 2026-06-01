@@ -26,6 +26,10 @@ class FestivalEditionsTable
                     ->label('Miasto')
                     ->sortable(),
 
+                TextColumn::make('location')
+                    ->label('Lokalizacja')
+                    ->placeholder('Hala MCKiS'),
+
                 TextColumn::make('rok')
                     ->label('Rok')
                     ->sortable(),

@@ -34,6 +34,9 @@ class FestivalEditionForm
                             ->label('Miasto')
                             ->required()
                             ->maxLength(50),
+                            
+                        TextInput::make('location')
+                            ->label('Lokalizacja'),
 
                         TextInput::make('rok')
                             ->label('Rok')

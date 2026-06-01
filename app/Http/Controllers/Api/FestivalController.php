@@ -22,14 +22,12 @@ class FestivalController extends Controller
             'edition' => $festival->getDisplayEdition(),
             'title' => $festival->title,
             'city' => $festival->city,
+            'location' => $festival->location,
             'year' => $festival->rok,
-
             'registration_start' => $festival->registration_start,
             'registration_end' => $festival->registration_end,
-
             'festival_start' => $festival->festival_start,
             'festival_end' => $festival->festival_end,
-
             'results_at' => $festival->results_at,
         ]);
     }

@@ -20,6 +20,7 @@ class FestivalEdition extends Model
         'title',
         'slug',
         'city',
+        'location',
         'rok',
         'registration_start',
         'registration_end',
