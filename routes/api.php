@@ -11,6 +11,7 @@ use App\Http\Controllers\GrandsControler;
 use App\Http\Controllers\Api\FestivalController;
 use App\Http\Controllers\Api\FestivalTopicController;
 use App\Http\Controllers\Api\SponsorController;
+use App\Http\Controllers\ContactController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -54,3 +55,5 @@ Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'g
 Route::get('/festival/current', [FestivalController::class, 'current']);
 Route::get('/festival/current/topics', [FestivalTopicController::class, 'current']);
 Route::get('/sponsors', [SponsorController::class, 'index']);
+
+Route::post('/contact', [ContactController::class, 'send']);
