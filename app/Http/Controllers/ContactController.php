@@ -28,7 +28,7 @@ class ContactController extends Controller
 
         $captcha = $response->json();
 
-        if (!$captcha['success'] || $captcha['score'] < 0.1) {
+        if (!$captcha['success'] || $captcha['score'] < 0.5) {
             return response()->json(['message' => 'Weryfikacja reCAPTCHA nie powiodła się.'], 422);
         }
 
