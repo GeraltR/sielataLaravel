@@ -19,7 +19,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5173')],
+    'allowed_origins' => ['https://festiwal.sielata.com.pl',
+        'https://sielata.com.pl',
+        'https://www.sielata.com.pl',
+    ],
 
     'allowed_origins_patterns' => [],
 
