@@ -29,6 +29,8 @@ class FestivalTopicsTable
                 TextColumn::make('subtitle')
                     ->searchable(),
                 ImageColumn::make('image'),
+                TextColumn::make('image_position')
+                    ->label('Pozycja obrazu'),
                 TextColumn::make('order')
                     ->numeric()
                     ->sortable(),

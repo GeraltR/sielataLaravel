@@ -23,6 +23,8 @@ class FestivalTopic extends Model
         'image',
         'order',
         'active',
+        'image_position',
+        'fade_width',
     ];
 
     public function festivalEdition()

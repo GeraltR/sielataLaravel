@@ -33,8 +33,9 @@ class FestivalTopicController extends Controller
 
                     'image' => $topic->image
                         ? asset('storage/' . $topic->image)
-                        : null,
-
+                         : null,
+                    'image_position' => $topic->image_position,
+                    'fade_width' => $topic->fade_width,
                     'order' => $topic->order,
                     'anniversary_value' => $topic->anniversary_value,
                     'anniversary_period' => $topic->anniversary_period,

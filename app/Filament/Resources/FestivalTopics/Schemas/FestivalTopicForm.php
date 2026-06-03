@@ -28,9 +28,9 @@ class FestivalTopicForm
                             ->searchable()
                             ->required(),
                         TextInput::make('anniversary_value')
-                        ->label('Rocznica'),
+                            ->label('Rocznica'),
                         TextInput::make('anniversary_period')
-                        ->label('okres'),
+                            ->label('okres'),
                         TextInput::make('title')
                             ->label('Tytuł')
                             ->required()
@@ -47,7 +47,26 @@ class FestivalTopicForm
                         FileUpload::make('image')
                             ->label('Grafika')
                             ->image()
+                            ->disk('public')
                             ->directory('festival-topics'),
+
+                        Select::make('image_position')
+                            ->label('Pozycja obrazka')
+                            ->options([
+                                'cover'   => 'Wypełnij (cover)',
+                                'contain' => 'Dopasuj (contain)',
+                            ])
+                            ->default('center'),
+
+                        Select::make('fade_width')
+                            ->label('Szerokość zanikania')
+                            ->options([
+                                'none'   => 'Brak',
+                                'short'  => 'Krótka',
+                                'medium' => 'Średnia',
+                                'long'   => 'Długa',
+                            ])
+                            ->default('hidden'),
 
                         TextInput::make('order')
                             ->label('Kolejność')
