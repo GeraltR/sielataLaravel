@@ -8,6 +8,9 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
 
 class FestivalEditionsTable
 {
@@ -39,8 +42,13 @@ class FestivalEditionsTable
                     ->boolean(),
             ])
             ->filters([
-                //
+                Filter::make('active')
+                    ->label('Tylko aktywne')
+                    ->toggle()
+                    ->default(true)
+                    ->modifyQueryUsing(fn(Builder $query) => $query->where('active', true)),
             ])
+            ->filtersLayout(FiltersLayout::AboveContent)
             ->recordActions([
                 EditAction::make(),
             ])

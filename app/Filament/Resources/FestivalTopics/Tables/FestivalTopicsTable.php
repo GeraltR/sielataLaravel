@@ -9,6 +9,9 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
+use App\Models\FestivalEdition;
+use Filament\Tables\Enums\FiltersLayout;
 
 class FestivalTopicsTable
 {
@@ -23,7 +26,7 @@ class FestivalTopicsTable
                     ->label('Rocznica')
                     ->sortable(),
                 TextColumn::make('anniversary_period')
-                    ->label('okres'),    
+                    ->label('okres'),
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('subtitle')
@@ -46,8 +49,17 @@ class FestivalTopicsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('festival_edition_id')
+                    ->label('Edycja')
+                    ->options(function () {
+                        return FestivalEdition::orderBy('rok', 'desc')
+                            ->pluck('edition', 'id')
+                            ->prepend('Wszystkie', '')
+                            ->toArray();
+                    })
+                    ->native(false),
             ])
+            ->filtersLayout(FiltersLayout::AboveContent)
             ->recordActions([
                 EditAction::make(),
             ])

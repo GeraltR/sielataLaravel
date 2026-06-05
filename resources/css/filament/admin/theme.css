@@ -1,0 +1,21 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+
+/* Ukryj przyciski filtrów */
+button[wire\:click*="resetTableFilters"] {
+    display: none !important;
+}
+button[wire\:click="applyTableFilters"] {
+    visibility: hidden !important;
+    position: absolute !important;
+}
+.fi-ta-filters-header {
+    display: none !important;
+}
+.fi-ta-filters-above-content-ctn{
+    margin: 0 !important;
+    padding: 1rem 1rem 0rem 0.5rem !important;
+}
