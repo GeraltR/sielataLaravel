@@ -54,6 +54,9 @@ docker/8.4/php.ini
 /resources/views/vendor/filament-panels/components/header/*
 !/resources/views/vendor/filament-panels/components/header/simple.blade.php
 /public/css/*
+!/public/css/filament/
+!/public/css/filament/admin/
+!/public/css/filament/admin/theme.css
 /public/fonts/*
 /public/js/*
 /storage/app/public/
