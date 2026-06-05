@@ -26,7 +26,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('atc')
             ->brandName('SieLata')
             ->brandLogo(asset('images/sielata_logo_53w.gif'))
             ->brandLogoHeight('5rem')
