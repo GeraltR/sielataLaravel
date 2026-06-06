@@ -53,7 +53,10 @@ Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
 Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);
 
 Route::get('/festival/current', [FestivalController::class, 'current']);
+Route::get('/festival/current/rules', [FestivalController::class, 'rules']);
+
 Route::get('/festival/current/topics', [FestivalTopicController::class, 'current']);
+
 Route::get('/sponsors', [SponsorController::class, 'index']);
 
 Route::post('/contact', [ContactController::class, 'send']);

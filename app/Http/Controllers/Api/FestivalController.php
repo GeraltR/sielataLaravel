@@ -31,4 +31,24 @@ class FestivalController extends Controller
             'results_at' => $festival->results_at,
         ]);
     }
+
+    public function rules()
+    {
+        $festival = FestivalEdition::where('active', true)->first();
+
+        if (!$festival) {
+            return response()->json([], 404);
+        }
+
+        $rule = \App\Models\FestivalRule::where('festival_edition_id', $festival->id)->first();
+
+        if (!$rule) {
+            return response()->json(null, 404);
+        }
+
+        return response()->json([
+            'title'   => $rule->title,
+            'content' => $rule->content,
+        ]);
+    }
 }
