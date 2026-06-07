@@ -5,9 +5,7 @@ namespace App\Filament\Resources\FestivalRules;
 use App\Filament\Resources\FestivalRules\Pages\CreateFestivalRule;
 use App\Filament\Resources\FestivalRules\Pages\EditFestivalRule;
 use App\Filament\Resources\FestivalRules\Pages\ListFestivalRules;
-use App\Filament\Resources\FestivalRules\Pages\ViewFestivalRule;
 use App\Filament\Resources\FestivalRules\Schemas\FestivalRuleForm;
-use App\Filament\Resources\FestivalRules\Schemas\FestivalRuleInfolist;
 use App\Filament\Resources\FestivalRules\Tables\FestivalRulesTable;
 use App\Models\FestivalRule;
 use BackedEnum;
@@ -29,10 +27,7 @@ class FestivalRuleResource extends Resource
         return FestivalRuleForm::configure($schema);
     }
 
-    public static function infolist(Schema $schema): Schema
-    {
-        return FestivalRuleInfolist::configure($schema);
-    }
+
 
     public static function table(Table $table): Table
     {
@@ -46,12 +41,16 @@ class FestivalRuleResource extends Resource
         ];
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Regulamin';
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListFestivalRules::route('/'),
             'create' => CreateFestivalRule::route('/create'),
-            'view' => ViewFestivalRule::route('/{record}'),
             'edit' => EditFestivalRule::route('/{record}/edit'),
         ];
     }

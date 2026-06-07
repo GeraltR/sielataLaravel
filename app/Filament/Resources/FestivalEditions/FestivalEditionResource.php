@@ -39,6 +39,11 @@ class FestivalEditionResource extends Resource
         ];
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Edycje Festiwalu';
+    }
+
     public static function getPages(): array
     {
         return [

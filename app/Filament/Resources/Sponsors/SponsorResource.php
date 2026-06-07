@@ -39,6 +39,11 @@ class SponsorResource extends Resource
         ];
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Sponsorzy';
+    }
+
     public static function getPages(): array
     {
         return [

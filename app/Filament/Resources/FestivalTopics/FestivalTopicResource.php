@@ -39,6 +39,11 @@ class FestivalTopicResource extends Resource
         ];
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Tematy edycji';
+    }
+
     public static function getPages(): array
     {
         return [
