@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\FestivalController;
 use App\Http\Controllers\Api\FestivalTopicController;
 use App\Http\Controllers\Api\SponsorController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\WeatherReadingController;
+use App\Http\Controllers\WeatherController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -62,5 +62,5 @@ Route::get('/sponsors', [SponsorController::class, 'index']);
 
 Route::post('/contact', [ContactController::class, 'send']);
 
-Route::get('/weather/history', [WeatherReadingController::class, 'history']);
-Route::post('/weather/log', [WeatherReadingController::class, 'store']);
+Route::get('/weather/history', [WeatherController::class, 'history']);
+Route::post('/weather/log', [WeatherController::class, 'store']);
