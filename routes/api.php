@@ -63,4 +63,4 @@ Route::get('/sponsors', [SponsorController::class, 'index']);
 Route::post('/contact', [ContactController::class, 'send']);
 
 Route::get('/weather/history', [WeatherReadingController::class, 'history']);
-Route::post('/weather/log', [WeatherController::class, 'store']);
+Route::post('/weather/log', [WeatherReadingController::class, 'store']);
