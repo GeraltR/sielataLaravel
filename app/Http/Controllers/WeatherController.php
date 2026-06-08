@@ -9,6 +9,10 @@ class WeatherController extends Controller
 {
     public function store(Request $request)
     {
+        \Log::info('weather store called', [
+            'key_match' => hash_equals(config('services.weather.cron_token'), $request->query('key', '')),
+            'data' => $request->all()
+        ]);
         if (!hash_equals(config('services.weather.cron_token'), $request->query('key', ''))) {
             return response('Unauthorized', 403);
         }
@@ -21,12 +25,17 @@ class WeatherController extends Controller
             'rain'     => 'required|numeric',
         ]);
 
-        WeatherReading::create([...$data, 'recorded_at' => time()]);
+        try {
+            WeatherReading::create([...$data, 'recorded_at' => time()]);
+            \Log::info('weather saved');
+        } catch (\Exception $e) {
+            \Log::error('weather save error: ' . $e->getMessage());
+        }
 
-        // zostaw tylko ostatnie 288 wpisów (24h)
-        WeatherReading::orderByDesc('id')
-            ->skip(288)->take(PHP_INT_MAX)
-            ->delete();
+        $oldest = WeatherReading::orderByDesc('id')->skip(12000)->value('id');
+        if ($oldest) {
+            WeatherReading::where('id', '<=', $oldest)->delete();
+        }
 
         return response()->noContent();
     }
