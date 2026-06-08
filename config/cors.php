@@ -22,6 +22,7 @@ return [
     'allowed_origins' => ['https://festiwal.sielata.com.pl',
         'https://sielata.com.pl',
         'https://www.sielata.com.pl',
+        'https://pogoda.sielata.com.pl',
     ],
 
     'allowed_origins_patterns' => [],

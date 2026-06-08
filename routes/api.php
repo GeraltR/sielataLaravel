@@ -60,3 +60,6 @@ Route::get('/festival/current/topics', [FestivalTopicController::class, 'current
 Route::get('/sponsors', [SponsorController::class, 'index']);
 
 Route::post('/contact', [ContactController::class, 'send']);
+
+Route::get('/weather/history', [WeatherController::class, 'history']);
+Route::post('/weather/log', [WeatherController::class, 'store']);
