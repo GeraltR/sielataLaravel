@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\FestivalController;
 use App\Http\Controllers\Api\FestivalTopicController;
 use App\Http\Controllers\Api\SponsorController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\WeatherController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
