@@ -17,35 +17,12 @@ class FestivalRulesTable
     {
         return $table
             ->columns([
-                TextColumn::make('festival_edition_id')
-                    ->numeric()
+                TextColumn::make('festivalEdition.edition')
+                    ->label('Edycja')
                     ->sortable(),
                 TextColumn::make('title')
+                    ->label('Tytuł')
                     ->searchable(),
-                TextColumn::make('anniversary_value')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('anniversary_period')
-                    ->searchable(),
-                TextColumn::make('subtitle')
-                    ->searchable(),
-                ImageColumn::make('image'),
-                ImageColumn::make('image_position'),
-                TextColumn::make('fade_width')
-                    ->searchable(),
-                TextColumn::make('order')
-                    ->numeric()
-                    ->sortable(),
-                IconColumn::make('active')
-                    ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

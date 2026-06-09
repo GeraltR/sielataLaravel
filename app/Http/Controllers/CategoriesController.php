@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Categories;
+use App\Models\Category;
 
 class CategoriesController extends Controller
 {
@@ -21,7 +20,7 @@ class CategoriesController extends Controller
 
     public function get_categories(Request $request, $year)
     {
-        $category = Categories::where('rok', '=', $year)->orderBy('klasa','asc')->orderBy('symbol', 'asc')->get();
+        $category = Category::where('rok', '=', $year)->orderBy('klasa','asc')->orderBy('symbol', 'asc')->get();
         return response()->json([
             "status" => 200,
             "categories" => $category

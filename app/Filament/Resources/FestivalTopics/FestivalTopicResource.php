@@ -22,6 +22,8 @@ class FestivalTopicResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static ?string $pluralModelLabel = 'Tematy Festiwalu';
+
     public static function form(Schema $schema): Schema
     {
         return FestivalTopicForm::configure($schema);
@@ -52,4 +54,5 @@ class FestivalTopicResource extends Resource
             'edit' => EditFestivalTopic::route('/{record}/edit'),
         ];
     }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Categories;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,7 +25,7 @@ class CreateRegisteredModelsTable extends Migration
             $table->tinyInteger('wynik')->unsigned()->default(0);
             $table->integer('idparent')->unsigned()->nullable();
             $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Categories::class);
+            $table->foreignIdFor(Category::class);
         });
     }
 

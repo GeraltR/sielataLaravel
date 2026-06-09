@@ -20,7 +20,9 @@ class FestivalEditionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'Nazwa';
+
+    protected static ?string $pluralModelLabel = 'Edycje Festiwalu';
 
     public static function form(Schema $schema): Schema
     {
@@ -52,4 +54,5 @@ class FestivalEditionResource extends Resource
             'edit' => EditFestivalEdition::route('/{record}/edit'),
         ];
     }
+
 }

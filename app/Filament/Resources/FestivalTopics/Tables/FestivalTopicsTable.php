@@ -19,8 +19,8 @@ class FestivalTopicsTable
     {
         return $table
             ->columns([
-                TextColumn::make('festival_edition_id')
-                    ->numeric()
+                TextColumn::make('festivalEdition.edition')
+                    ->label('Edycja')
                     ->sortable(),
                 TextColumn::make('anniversary_value')
                     ->label('Rocznica')
@@ -28,16 +28,21 @@ class FestivalTopicsTable
                 TextColumn::make('anniversary_period')
                     ->label('okres'),
                 TextColumn::make('title')
+                    ->label('Tytuł')
                     ->searchable(),
                 TextColumn::make('subtitle')
+                    ->label('Podtytuł')
                     ->searchable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->label('Obrazek'),
                 TextColumn::make('image_position')
                     ->label('Pozycja obrazu'),
                 TextColumn::make('order')
+                    ->label('Kolejność')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('active')
+                    ->label('Aktywny')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -59,14 +64,10 @@ class FestivalTopicsTable
                     })
                     ->native(false),
             ])
+            ->deferFilters(false)
             ->filtersLayout(FiltersLayout::AboveContent)
             ->recordActions([
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

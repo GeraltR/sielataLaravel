@@ -17,6 +17,7 @@ class SponsorsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nazwa')
                     ->searchable(),
                 ImageColumn::make('logo_image')
                     ->getStateUsing(fn ($record) => $record->logo)
@@ -25,36 +26,20 @@ class SponsorsTable
                     ->getStateUsing(fn ($record) => asset('storage/' . $record->logo))
                     ->extraImgAttributes(['style' => 'background-color: white; padding: 6px; border-radius: 6px;',])
                     ->size(80),   
-                TextColumn::make('logo')
-                    ->searchable()
-                    ->label('file')
-                    ->copyable(),
                 TextColumn::make('url')
                     ->searchable(),
                 TextColumn::make('order')
+                    ->label('Kolejność')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('active')
                     ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

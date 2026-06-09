@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FestivalRule extends Model
 {
-    /** @use HasFactory<\Database\Factories\FestivalTopicFactory> */
     use HasFactory;
 
     protected $table = 'festival_rule';

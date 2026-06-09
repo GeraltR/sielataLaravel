@@ -22,6 +22,8 @@ class SponsorResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static ?string $pluralModelLabel = 'Sponsorzy';
+
     public static function form(Schema $schema): Schema
     {
         return SponsorForm::configure($schema);

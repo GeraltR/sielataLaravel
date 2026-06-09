@@ -20,7 +20,9 @@ class FestivalRuleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'Tytuł';
+
+    protected static ?string $pluralModelLabel = 'Regulamin Festiwalu';
 
     public static function form(Schema $schema): Schema
     {

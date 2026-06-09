@@ -23,6 +23,8 @@ return [
         'https://sielata.com.pl',
         'https://www.sielata.com.pl',
         'https://pogoda.sielata.com.pl',
+        'http://localhost:5173', 
+        'http://localhost:5174'
     ],
 
     'allowed_origins_patterns' => [],

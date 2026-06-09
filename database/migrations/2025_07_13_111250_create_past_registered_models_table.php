@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Categories;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->tinyInteger('wynik')->unsigned()->default(0);
             $table->integer('idparent')->unsigned()->nullable();
             $table->foreignIdFor(User::class, 'users_id');
-            $table->foreignIdFor(Categories::class, 'categories_id');
+            $table->foreignIdFor(Category::class, 'categories_id');
             $table->integer('year')->unsigned()->default(date('Y'));
         });
     }
