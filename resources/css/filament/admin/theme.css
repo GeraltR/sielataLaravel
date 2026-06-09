@@ -19,3 +19,15 @@ button[wire\:click="applyTableFilters"] {
     margin: 0 !important;
     padding: 1rem 1rem 0rem 0.5rem !important;
 }
+
+.fi-fo-rich-editor-toolbar {
+    position: sticky;
+    top: 64px; 
+    background-color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    z-index: 10;
+}
+.dark .fi-fo-rich-editor-toolbar {
+    background-color: rgb(31 41 55); 
+}

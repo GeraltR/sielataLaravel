@@ -60,6 +60,11 @@ class FestivalEditionForm
                             ->native(false)
                             ->displayFormat('d.m.Y H:i')
                             ->required(),
+                        DateTimePicker::make('edit_cutoff')
+                            ->label('Termin umożliwiający zmiany zgłoszenia')
+                            ->native(false)
+                            ->displayFormat('d.m.Y H:i')
+                            ->required(),
                     ]),
 
                 Section::make('Festiwal')

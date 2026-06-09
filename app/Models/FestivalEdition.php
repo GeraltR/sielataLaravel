@@ -24,6 +24,7 @@ class FestivalEdition extends Model
         'rok',
         'registration_start',
         'registration_end',
+        'edit_cutoff',
         'festival_start',
         'festival_end',
         'results_at',
