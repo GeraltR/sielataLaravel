@@ -4,8 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6552707392a7b5f44b990a9fcbbb20c",
+    "content-hash": "728ed701da091c4105f3ddb4ef2ccff2",
     "packages": [
+        {
+            "name": "androsamp/filament-rich-editor-textcolor",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AndroSamp-it/filament-rich-editor-textcolor.git",
+                "reference": "db9fdc4edd9ebf1990cf8a9879af3dfe9ee2382a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AndroSamp-it/filament-rich-editor-textcolor/zipball/db9fdc4edd9ebf1990cf8a9879af3dfe9ee2382a",
+                "reference": "db9fdc4edd9ebf1990cf8a9879af3dfe9ee2382a",
+                "shasum": ""
+            },
+            "require": {
+                "filament/forms": "^4.0|^5.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Androsamp\\FilamentRichEditorTextColor\\FilamentRichEditorTextColorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Androsamp\\FilamentRichEditorTextColor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament Rich Editor text color plugin (TipTap) for FilamentPHP.",
+            "keywords": [
+                "color",
+                "filament",
+                "filamentphp",
+                "laravel",
+                "plugin",
+                "rich-editor",
+                "text-color",
+                "tiptap"
+            ],
+            "support": {
+                "issues": "https://github.com/AndroSamp-it/filament-rich-editor-textcolor/issues",
+                "source": "https://github.com/AndroSamp-it/filament-rich-editor-textcolor"
+            },
+            "time": "2026-03-19T10:27:23+00:00"
+        },
         {
             "name": "blade-ui-kit/blade-heroicons",
             "version": "2.7.0",
