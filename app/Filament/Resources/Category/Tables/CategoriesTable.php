@@ -12,6 +12,9 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
+use App\Models\Category;
+
 
 class CategoriesTable
 {
@@ -49,20 +52,31 @@ class CategoriesTable
             ->recordActions([
                 EditAction::make(),
             ])
-            ->filters(([
+            ->filters([
+                SelectFilter::make('in_rok')
+                    ->label('Rok')
+                    ->attribute('rok')
+                    ->searchable()
+                    ->default(
+                        Category::query()->max('rok')
+                    )
+                    ->options(
+                        Category::query()
+                            ->distinct()
+                            ->orderBy('rok')
+                            ->pluck('rok', 'rok')
+                            ->toArray()
+                    )
+                    ->columns(1),
+
                 Filter::make('nie_zawiera')
                     ->label('Nie zawiera')
                     ->form([
                         TextInput::make('fraza')
                             ->label('Wyklucz frazę')
                             ->maxLength(16),
-                        TextInput::make('rok')
-                            ->label('Wyklucz rok')
-                            ->numeric()
-                            ->maxLength(4),
-
                     ])
-                    ->columns(2)
+                    ->columns(1)
                     ->query(
                         fn(Builder $query, array $data) =>
                         $query
@@ -71,14 +85,27 @@ class CategoriesTable
                                 fn(Builder $query) => $query
                                     ->where('symbol', 'not like', '%' . $data['fraza'] . '%')
                             )
-                            ->when(
-                                $data['rok'],
-                                fn(Builder $query) => $query
-                                    ->where('rok', '!=', $data['rok'])
-                            )
-                    )
-            ]))
-            ->filtersFormColumns(2)
+                    ),
+
+                Filter::make('nie_zawiera_roku')
+                    ->label('nie zawiera roku')
+                    ->form([
+                        TextInput::make('rok')
+                            ->label('Wyklucz rok')
+                            ->numeric()
+                            ->maxLength(6),
+                    ])
+                    ->columns(1)
+                    ->query(
+                        fn(Builder $query, array $data) =>
+                        $query->when(
+                            $data['rok'],
+                            fn(Builder $query) => $query
+                                ->where('rok', '!=', $data['rok'])
+                        )
+                    ),
+            ])
+            ->filtersFormColumns(4)
             ->filtersLayout(FiltersLayout::AboveContent)
             ->deferFilters(false)
             ->toolbarActions([
