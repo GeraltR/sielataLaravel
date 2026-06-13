@@ -6,11 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\FestivalTopic;
 use App\Helpers\Roman;
-use App\Support\Roman as SupportRoman;
 
 class FestivalEdition extends Model
 {
-    /** @use HasFactory<\Database\Factories\FestivalEditionFactory> */
     use HasFactory;
 
     protected $table = 'festival_edition';
