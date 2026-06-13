@@ -113,34 +113,34 @@ class RegisteredModelsController extends Controller
         }
         if ($age != 0) {
             switch ($age) {
-                    //Mlodzik
+                //Mlodzik
                 case 1:
                     $ageBegin = $maxYear - 13;
                     $ageEnd = $maxYear;
                     break;
-                    //Junior
+                //Junior
                 case 2:
                     $ageBegin = $maxYear - 17;
                     $ageEnd  = $maxYear - 14;
                     break;
-                    //Mlodzik i Junior
+                //Mlodzik i Junior
                 case 3:
                     $ageBegin = $maxYear - 17;
                     $ageEnd = $maxYear;
                     break;
-                    //Senior
+                //Senior
                 case 4:
                     $ageBegin = 1900;
                     $ageEnd = $maxYear - 18;
                     break;
-                    //Młodzik i Senior
+                //Młodzik i Senior
                 case 5:
                     $ageBegin = 1900;
                     $ageEnd = $maxYear;
                     $notAgeBegin = $maxYear - 17;
                     $notAgeEnd = $maxYear - 13;
                     break;
-                    //Junior i Senior
+                //Junior i Senior
                 case 6:
                     $ageBegin = 1900;
                     $ageEnd = $maxYear - 13;
@@ -238,24 +238,24 @@ class RegisteredModelsController extends Controller
             $value = '1';
         }
         $subQuery = DB::table('registered_models')
-                    ->select(
-                        'registered_models.*',
-                        'users.imie',
-                        'users.nazwisko',
-                        DB::raw('(SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) as total_points'),
-                        DB::raw('(SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) as flaga')
-                    )
-                    ->join('users', 'registered_models.users_id', '=', 'users.id')
-                    ->where($field, '=', $value)
-                    ->where('users.rokur', '<', $olderYear);
+            ->select(
+                'registered_models.*',
+                'users.imie',
+                'users.nazwisko',
+                DB::raw('(SELECT IFNULL(SUM(points),0) FROM models_ratings WHERE models_ratings.model_id = registered_models.id) as total_points'),
+                DB::raw('(SELECT IFNULL(SUM(flaga),0) FROM models_ratings WHERE registered_models.id = models_ratings.model_id) as flaga')
+            )
+            ->join('users', 'registered_models.users_id', '=', 'users.id')
+            ->where($field, '=', $value)
+            ->where('users.rokur', '<', $olderYear);
 
         $models = DB::table(DB::raw("({$subQuery->toSql()}) as model_points"))
-                  ->mergeBindings($subQuery) // ważne aby przekazać bindings
-                  ->selectRaw('*, 
+            ->mergeBindings($subQuery) // ważne aby przekazać bindings
+            ->selectRaw('*, 
                     IF (total_points != 0, DENSE_RANK() OVER(ORDER BY total_points DESC), 0) as place, 
                     IF (flaga < total_points, DENSE_RANK() OVER (ORDER BY total_points DESC), 
                               DENSE_RANK() OVER (ORDER BY flaga ASC)+4) AS prefer')
-                  ->get();
+            ->get();
 
         return $models;
     }
@@ -364,59 +364,40 @@ class RegisteredModelsController extends Controller
         return $last_id;
     }
 
-    private function setStartNumber($startId, $endId, $field, $mustby, $idclass)
+    private function getMaxKonkursNumber(string $class)
     {
-        $max = RegisteredModels::select(DB::raw('max(konkurs) as LP'))
+        return RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
             ->where('konkurs', '!=', '0')
-            ->value('LP');
+            ->where('klasa', '=', $class)->max('konkurs') ?? 0;
+    }
 
-        if ($max === null)
-            $max = 0;
-
+    private function setStartNumber(int $startId, int $endId)
+    {
         $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
-            ->whereBetween('id', [$startId, $endId])
+        ->whereBetween('id', [$startId, $endId])
             ->where('konkurs', '=', '0')
-            ->where($field, $mustby, $idclass)
             ->orderBy('id')
             ->get();
 
-        $lp = $max + 1;
         foreach ($models as $a) {
+            $lp = $this->getMaxKonkursNumber($a['klasa']) + 1;
             $t = RegisteredModels::findOrFail($a['id']);
             $t->update([
                 "konkurs" => $lp
             ]);
-            $lp = $lp + 1;
         }
     }
 
-    public function print_models($id)
+    public function print_models(string $range)
     {
         $maxYear = $this->maxYear();
-        $pos = strPos($id, '-');
-        $posKlasa = strPos($id, 'klasa=');
-        if ($pos > 0) {
-            $startId = substr($id, 0, $pos);
-            $endId = substr($id, $pos + 1, $posKlasa - ($pos + 1));
-        } else {
-            $startId = $id;
-            $endId = $id;
+        if (!preg_match('/^(\d+)(?:-(\d+))?(?:klasa=(\d+))?$/', $range, $m)) {
+            abort(400, 'Invalid id format');
         }
-        $idclass = substr($id, $posKlasa + 6);
-
-        if ($idclass != 0) {
-            $field = 'categories.klasa';
-            $mustby = '=';
-            if ($idclass == 1)
-                $idclass = 'K';
-            else
-                $idclass = 'P';
-        } else {
-            $field = 'users_id';
-            $mustby = '>=';
-        }
-
-        $this->setStartNumber($startId, $endId, $field, $mustby, $idclass);
+        $startId = $m[1];
+        $endId   = (isset($m[2]) && $m[2] !== '') ? $m[2] : $m[1];
+      
+        $this->setStartNumber($startId, $endId);
 
         $models = RegisteredModels::whereBetween('registered_models.id', [$startId, $endId])
             ->join('categories', 'categories_id', '=', 'idkat')
@@ -433,7 +414,6 @@ class RegisteredModelsController extends Controller
                 'users.rokur',
                 DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
-            ->where($field, $mustby, $idclass)
             ->get();
         return response()->json([
             'status' => 200,
@@ -442,7 +422,7 @@ class RegisteredModelsController extends Controller
     }
 
     //Geting list of models for user
-    public function get_models($id)
+    public function get_models(int $id)
     {
         $models = RegisteredModels::where('users_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
@@ -455,7 +435,7 @@ class RegisteredModelsController extends Controller
     }
 
     //Geting list of reward a models
-    public function get_reward_models($category_id)
+    public function get_reward_models(int $category_id)
     {
         try {
             $isAdmin = auth()->user()->admin;
@@ -482,7 +462,7 @@ class RegisteredModelsController extends Controller
             ->where('wynik', '!=', '0')
             ->where('categories_id', $mustby, $category_id)
             ->orderBy('users.nazwisko', 'asc')
-            ->orderBy('users.imie', 'asc')  
+            ->orderBy('users.imie', 'asc')
             ->orderBy('categories.grupa', 'asc')
             ->orderBy('wynik', 'asc')
             ->get();
@@ -499,7 +479,7 @@ class RegisteredModelsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function list_contestant($id)
+    public function list_contestant(int $id)
     {
         $list = RegisteredModelsDB::where('categories_id', $id)
             ->join('categories', 'categories_id', '=', 'idkat')
@@ -529,7 +509,7 @@ class RegisteredModelsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update_model(Request $request, $id)
+    public function update_model(Request $request, int $id)
     {
         $model = RegisteredModels::findOrFail($id);
         $request->validate([
@@ -546,7 +526,7 @@ class RegisteredModelsController extends Controller
         return $id;
     }
 
-    public function delete_model($id)
+    public function delete_model(int $id)
     {
         RegisteredModels::findOrFail($id)->delete();
         return response()->noContent();
