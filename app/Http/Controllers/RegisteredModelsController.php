@@ -374,7 +374,7 @@ class RegisteredModelsController extends Controller
     private function setStartNumber(int $startId, int $endId)
     {
         $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
-        ->whereBetween('id', [$startId, $endId])
+            ->whereBetween('id', [$startId, $endId])
             ->where('konkurs', '=', '0')
             ->orderBy('id')
             ->get();
@@ -396,7 +396,7 @@ class RegisteredModelsController extends Controller
         }
         $startId = $m[1];
         $endId   = (isset($m[2]) && $m[2] !== '') ? $m[2] : $m[1];
-      
+
         $this->setStartNumber($startId, $endId);
 
         $models = RegisteredModels::whereBetween('registered_models.id', [$startId, $endId])
@@ -438,9 +438,9 @@ class RegisteredModelsController extends Controller
     public function get_reward_models(int $category_id)
     {
         try {
-            $isAdmin = auth()->user()->admin;
+            $isAdmin = auth()->user()->admin & 4;
         } catch (\Throwable $th) {
-            $isAdmin = 0;
+            $isAdmin = false;
         }
 
         if ($category_id == 0 || $category_id == $this->emptyCartonClass() || $category_id == $this->emptyPlasticClass())
@@ -530,5 +530,29 @@ class RegisteredModelsController extends Controller
     {
         RegisteredModels::findOrFail($id)->delete();
         return response()->noContent();
+    }
+
+    public function remove_absent_model(int $id)
+    {
+        try {
+            $isAdmin = auth()->user()->admin & 4;
+        } catch (\Throwable $th) {
+            $isAdmin = false;
+        }
+
+        if ($isAdmin) {
+            $model = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+                    ->where('registered_models.id', $id)
+                    ->firstOrFail();
+            try {
+                RegisteredModels::destroy($id);
+                return response()->json($model);
+            } catch (\Throwable $th) {
+                return response()->noContent();
+            }
+        }
+        else {
+            return response()->noContent();
+        }
     }
 }

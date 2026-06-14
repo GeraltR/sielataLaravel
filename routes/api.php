@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum'])->post('/connectcategories/{categorya}/{categ
 Route::middleware(['auth:sanctum'])->post('/add_model', [RegisteredModelsController::class, 'store']);
 Route::middleware(['auth:sanctum'])->post('/update_model/{id}', [RegisteredModelsController::class, 'update_model']);
 Route::middleware(['auth:sanctum'])->post('/saverating', [RegisteredModelsController::class, 'save_rating']);
+Route::middleware(['auth:sanctum'])->post('/removeabsent/{id}', [RegisteredModelsController::class, 'remove_absent_model']);
 Route::middleware(['auth:sanctum'])->delete('/delete_model/{id}', [RegisteredModelsController::class, 'delete_model']);
 
 Route::middleware(['auth:sanctum'])->post('/set_points/{user_id}', [ModelsRatingsController::class, 'set_points']);
