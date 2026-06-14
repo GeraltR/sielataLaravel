@@ -20,7 +20,15 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum'])->get('/learners/{id}', [UsersController::class, 'get_learners']);
 Route::middleware(['auth:sanctum'])->get('/finduser/{find}', [UsersController::class, 'get_users_with_registered_models']);
+Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
+Route::middleware(['auth:sanctum'])->post('/shortupdate_user/{id}', [UsersController::class, 'short_update']);
+Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
+Route::middleware(['auth:sanctum'])->post('/add_learner/{id}', [UsersController::class, 'add_learner']);
+Route::middleware(['auth:sanctum'])->post('/update_learner/{id}', [UsersController::class, 'update_learner']);
+Route::middleware(['auth:sanctum'])->delete('/delete_learner/{id}', [UsersController::class, 'delete_learner']);
+
 Route::middleware(['auth:sanctum'])->get('/categories/{rok}', [CategoriesController::class, 'get_categories']);
+
 Route::middleware(['auth:sanctum'])->get('/models/{id}', [RegisteredModelsController::class, 'get_models']);
 Route::middleware(['auth:sanctum'])->get('/printmodels/{range}', [RegisteredModelsController::class, 'print_models']);
 Route::middleware(['auth:sanctum'])->get('/listModels/classfilter/{idclass}/category/{id}/age/{age}/name/{name}', [RegisteredModelsController::class, 'get_list_models']);
@@ -29,33 +37,26 @@ Route::middleware(['auth:sanctum'])->get('/twocategories/{categorya}/{categoryb}
 Route::middleware(['auth:sanctum'])->get('/ratingmodels/{category}', [RegisteredModelsController::class, 'get_models_in_category']);
 Route::middleware(['auth:sanctum'])->get('/statistics', [RegisteredModelsController::class, 'get_statistics']);
 Route::middleware(['auth:sanctum'])->get('/listregisteredteenager', [RegisteredModelsController::class, 'get_list_registered_teenager']);
-Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
-
-
-Route::middleware(['auth:sanctum'])->post('/update_user/{id}', [UsersController::class, 'update']);
-Route::middleware(['auth:sanctum'])->post('/shortupdate_user/{id}', [UsersController::class, 'short_update']);
-Route::middleware(['auth:sanctum'])->post('/change_teacher/{id}', [UsersController::class, 'change_teacher']);
-Route::middleware(['auth:sanctum'])->post('/add_learner/{id}', [UsersController::class, 'add_learner']);
-Route::middleware(['auth:sanctum'])->post('/update_learner/{id}', [UsersController::class, 'update_learner']);
+Route::middleware(['auth:sanctum'])->post('/connectcategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'connect_category']);
 Route::middleware(['auth:sanctum'])->post('/add_model', [RegisteredModelsController::class, 'store']);
 Route::middleware(['auth:sanctum'])->post('/update_model/{id}', [RegisteredModelsController::class, 'update_model']);
 Route::middleware(['auth:sanctum'])->post('/saverating', [RegisteredModelsController::class, 'save_rating']);
-Route::middleware(['auth:sanctum'])->post('/connectcategories/{categorya}/{categoryb}', [RegisteredModelsController::class, 'connect_category']);
-Route::middleware(['auth:sanctum'])->post('/set_points/{user_id}', [ModelsRatingsController::class, 'set_points']);
-Route::middleware(['auth:sanctum'])->post('/add_grand', [GrandsControler::class, 'store']);
-
-
-Route::middleware(['auth:sanctum'])->delete('/delete_learner/{id}', [UsersController::class, 'delete_learner']);
 Route::middleware(['auth:sanctum'])->delete('/delete_model/{id}', [RegisteredModelsController::class, 'delete_model']);
+
+Route::middleware(['auth:sanctum'])->post('/set_points/{user_id}', [ModelsRatingsController::class, 'set_points']);
+
+Route::middleware(['auth:sanctum'])->post('/add_grand', [GrandsControler::class, 'store']);
 Route::middleware(['auth:sanctum'])->delete('/delete_result_grand_prix/{id}', [GrandsControler::class, 'delete_result_grand_prix']);
 
+Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
 
-Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
+
+
 Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);
+Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
 
 Route::get('/festival/current', [FestivalController::class, 'current']);
 Route::get('/festival/current/rules', [FestivalController::class, 'rules']);
-
 Route::get('/festival/current/topics', [FestivalTopicController::class, 'current']);
 
 Route::get('/sponsors', [SponsorController::class, 'index']);
