@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\FestivalTopicController;
 use App\Http\Controllers\Api\SponsorController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\PastGrandsController;
+use App\Http\Controllers\PastRegisteredModelsController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -52,9 +54,12 @@ Route::middleware(['auth:sanctum'])->delete('/delete_result_grand_prix/{id}', [G
 Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
 
 
-
 Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);
 Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
+
+Route::get('/pastrewardmodels/{category_id}/{year}', [PastRegisteredModelsController::class, 'get_reward_models']);
+Route::get('/pastresultgrandprixes/{order}/{year}', [PastGrandsController::class, 'get_list']);
+Route::get('/years', [PastRegisteredModelsController::class, 'get_years']);
 
 Route::get('/festival/current', [FestivalController::class, 'current']);
 Route::get('/festival/current/rules', [FestivalController::class, 'rules']);
