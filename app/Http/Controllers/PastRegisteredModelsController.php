@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use App\Models\PastRegisteredModels;
 
 class PastRegisteredModelsController extends Controller
@@ -16,7 +15,7 @@ class PastRegisteredModelsController extends Controller
             $mustby = '=';
 
         $rewards = PastRegisteredModels::join('categories', 'categories_id', '=', 'idkat')
-            ->join('users', 'users_id', 'users.id')
+            ->join('users', 'user_id', 'users.id')
             ->select(
                 'past_registered_models.*',
                 'categories.klasa',
