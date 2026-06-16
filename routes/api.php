@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum'])->delete('/delete_learner/{id}', [UsersContro
 Route::middleware(['auth:sanctum'])->get('/categories/{rok}', [CategoriesController::class, 'get_categories']);
 
 Route::middleware(['auth:sanctum'])->get('/models/{id}', [RegisteredModelsController::class, 'get_models']);
+Route::middleware(['auth:sanctum'])->get('/printmodels/byuser/{user_id}', [RegisteredModelsController::class, 'print_models_by_user']);
 Route::middleware(['auth:sanctum'])->get('/printmodels/{range}', [RegisteredModelsController::class, 'print_models']);
 Route::middleware(['auth:sanctum'])->get('/listModels/classfilter/{idclass}/category/{id}/age/{age}/name/{name}', [RegisteredModelsController::class, 'get_list_models']);
 Route::middleware(['auth:sanctum'])->get('/list2points/{category}/{userid}', [RegisteredModelsController::class, 'get_list2points']);

@@ -388,6 +388,33 @@ class RegisteredModelsController extends Controller
         }
     }
 
+    public function print_models_by_user(int $user_id)
+    {
+        $maxYear = $this->maxYear();
+
+        $models = RegisteredModels::where('registered_models.users_id', $user_id)
+            ->join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'users_id', 'users.id')
+            ->select(
+                'registered_models.*',
+                'categories.klasa',
+                'categories.symbol',
+                'categories.nazwa as categoryName',
+                'users.imie',
+                'users.nazwisko',
+                'users.miasto',
+                'users.klub',
+                'users.rokur',
+                DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
+            )
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
     public function print_models(string $range)
     {
         $maxYear = $this->maxYear();
