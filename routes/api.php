@@ -60,6 +60,7 @@ Route::get('/resultgrandprixes/{order}', [GrandsControler::class, 'get_list']);
 Route::get('/pastrewardmodels/{category_id}/{year}', [PastRegisteredModelsController::class, 'get_reward_models']);
 Route::get('/pastresultgrandprixes/{order}/{year}', [PastGrandsController::class, 'get_list']);
 Route::get('/years', [PastRegisteredModelsController::class, 'get_years']);
+Route::get('/grandprixyears', [PastGrandsController::class, 'get_years']);
 
 Route::get('/festival/current', [FestivalController::class, 'current']);
 Route::get('/festival/current/rules', [FestivalController::class, 'rules']);

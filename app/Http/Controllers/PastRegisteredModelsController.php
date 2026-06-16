@@ -24,16 +24,19 @@ class PastRegisteredModelsController extends Controller
                 'users.imie',
                 'users.nazwisko',
                 DB::raw('IF (past_registered_models.wynik < 4, "DYPLOM", "WYRÓŻNIENIE") as typeName'),
-                DB::raw('IF (past_registered_models.wynik = 1, "pierwsze", IF(past_registered_models.wynik = 2, "drugie", IF(past_registered_models.wynik = 3, "trzecie", "wyróżnienie"))) as place')
+                DB::raw('IF (past_registered_models.wynik = 1, "pierwsze", 
+                          IF (past_registered_models.wynik = 2, "drugie", 
+                          IF (past_registered_models.wynik = 3, "trzecie",
+                          IF (past_registered_models.wynik = 4, "wyróżnienie", "")))) as place')
             )
-            ->where('wynik', '!=', '0')
             ->where('categories_id', $mustby, $category_id)
             ->where('past_registered_models.year', $year)
             ->where('users.rokur', '<=', ($year - 18))
+            ->orderBy('categories.klasa', 'asc')
+            ->orderBy('categories.symbol', 'asc')
+            ->orderByRaw('FIELD(wynik, 1, 2, 3, 4, 0)')
             ->orderBy('users.nazwisko', 'asc')
             ->orderBy('users.imie', 'asc')
-            ->orderBy('categories.grupa', 'asc')
-            ->orderBy('wynik', 'asc')
             ->get();
 
         return response()->json([

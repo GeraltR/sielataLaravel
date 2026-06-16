@@ -47,4 +47,19 @@ class PastGrandsController extends Controller
             'grandprixes' => $list_grandprixes
         ]);
     }
+
+    public function get_years()
+    {
+        $years = PastGrands::distinct()->orderBy('year', 'desc')->pluck('year')->toArray();
+        $currentYear = $this->maxYear();
+
+        if (!in_array($currentYear, $years)) {
+            array_unshift($years, $currentYear);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'years' => $years
+        ]);
+    }
 }
