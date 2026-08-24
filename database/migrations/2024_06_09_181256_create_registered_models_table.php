@@ -24,8 +24,8 @@ class CreateRegisteredModelsTable extends Migration
             $table->integer('konkurs')->unsigned()->default(0);
             $table->tinyInteger('wynik')->unsigned()->default(0);
             $table->integer('idparent')->unsigned()->nullable();
-            $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Category::class);
+            $table->foreignIdFor(User::class, 'users_id');
+            $table->foreignIdFor(Category::class, 'categories_id');
         });
     }
 

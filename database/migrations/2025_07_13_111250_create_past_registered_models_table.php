@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('konkurs')->unsigned()->default(0);
             $table->tinyInteger('wynik')->unsigned()->default(0);
             $table->integer('idparent')->unsigned()->nullable();
-            $table->foreignIdFor(User::class, 'users_id');
+            $table->foreignIdFor(User::class, 'user_id');
             $table->foreignIdFor(Category::class, 'categories_id');
             $table->integer('year')->unsigned()->default(date('Y'));
         });
