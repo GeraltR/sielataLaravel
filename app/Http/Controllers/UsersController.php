@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
 
@@ -140,11 +141,28 @@ class UsersController extends Controller
         $request->validate([
             'imie' => ['required', 'string', 'max:255'],
             'nazwisko' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'rokur' => ['required', 'integer', 'between:1900,' . $this->maxYear()],
             'idopiekuna' => ['required', 'integer'],
             'miasto' => ['required', 'string', 'max:255'],
         ]);
+
+        $existing = User::where('email', $request->email)->first();
+
+        if ($existing) {
+            $matches = strcasecmp(trim($existing->imie), trim($request->imie)) === 0
+                && strcasecmp(trim($existing->nazwisko), trim($request->nazwisko)) === 0
+                && (int) $existing->rokur === (int) $request->rokur;
+
+            if (!$matches) {
+                throw ValidationException::withMessages([
+                    'email' => ['Adres email jest zarejestrowany na kogoś innego, nie może być użyty ponownie.'],
+                ]);
+            }
+
+            $existing->update(['idopiekuna' => $request->idopiekuna]);
+            return $existing->id;
+        }
 
         $learner = User::create([
             'imie' => $request->imie,
