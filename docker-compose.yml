@@ -28,6 +28,20 @@ services:
             - selenium
             - phpmyadmin
 
+    scheduler:
+        image: 'sail-8.4/app'
+        entrypoint: ['php', 'artisan', 'schedule:work']
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - mysql
+            - laravel.test
+
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
