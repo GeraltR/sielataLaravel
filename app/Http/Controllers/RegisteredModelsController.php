@@ -91,7 +91,7 @@ class RegisteredModelsController extends Controller
     }
 
 
-    public function get_list_models($idclass, $id, $age, $name)
+    private function classAgeFilter($idclass, $age)
     {
         $maxYear = $this->maxYear();
         $agefield = 'users.rokur';
@@ -147,6 +147,23 @@ class RegisteredModelsController extends Controller
                     break;
             }
         }
+
+        return compact('agefield', 'field', 'mustby', 'idclass', 'ageBegin', 'ageEnd', 'notAgeBegin', 'notAgeEnd');
+    }
+
+    public function get_list_models($idclass, $id, $age, $name)
+    {
+        $maxYear = $this->maxYear();
+        [
+            'agefield' => $agefield,
+            'field' => $field,
+            'mustby' => $mustby,
+            'idclass' => $idclass,
+            'ageBegin' => $ageBegin,
+            'ageEnd' => $ageEnd,
+            'notAgeBegin' => $notAgeBegin,
+            'notAgeEnd' => $notAgeEnd,
+        ] = $this->classAgeFilter($idclass, $age);
 
         if ($name != '&') {
             $fieldname = 'registered_models.nazwa';
@@ -373,10 +390,16 @@ class RegisteredModelsController extends Controller
 
     private function setStartNumber(int $startId, int $endId)
     {
+        $ids = RegisteredModels::whereBetween('id', [$startId, $endId])->pluck('id');
+        $this->assignStartNumbers($ids);
+    }
+
+    private function assignStartNumbers($modelIds)
+    {
         $models = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
-            ->whereBetween('id', [$startId, $endId])
+            ->whereIn('registered_models.id', $modelIds)
             ->where('konkurs', '=', '0')
-            ->orderBy('id')
+            ->orderBy('registered_models.id')
             ->get();
 
         foreach ($models as $a) {
@@ -442,6 +465,53 @@ class RegisteredModelsController extends Controller
                 DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
             )
             ->get();
+        return response()->json([
+            'status' => 200,
+            'models' => $models
+        ]);
+    }
+
+    public function print_models_by_filter($idclass, $age)
+    {
+        $maxYear = $this->maxYear();
+        [
+            'agefield' => $agefield,
+            'field' => $field,
+            'mustby' => $mustby,
+            'idclass' => $idclass,
+            'ageBegin' => $ageBegin,
+            'ageEnd' => $ageEnd,
+            'notAgeBegin' => $notAgeBegin,
+            'notAgeEnd' => $notAgeEnd,
+        ] = $this->classAgeFilter($idclass, $age);
+
+        $modelIds = RegisteredModels::join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'users_id', 'users.id')
+            ->where($field, $mustby, $idclass)
+            ->whereBetween($agefield, [$ageBegin, $ageEnd])
+            ->whereNotBetween($agefield, [$notAgeBegin, $notAgeEnd])
+            ->pluck('registered_models.id');
+
+        $this->assignStartNumbers($modelIds);
+
+        $models = RegisteredModels::whereIn('registered_models.id', $modelIds)
+            ->join('categories', 'categories_id', '=', 'idkat')
+            ->join('users', 'users_id', 'users.id')
+            ->select(
+                'registered_models.*',
+                'categories.klasa',
+                'categories.symbol',
+                'categories.nazwa as categoryName',
+                'users.imie',
+                'users.nazwisko',
+                'users.miasto',
+                'users.klub',
+                'users.rokur',
+                DB::raw('IF (users.rokur <= ' . ($maxYear - 18) . ', "Senior", IF (users.rokur > ' . ($maxYear - 14) . ', "Młodzik", "Junior")) AS kategoriaWiek')
+            )
+            ->orderBy('registered_models.id')
+            ->get();
+
         return response()->json([
             'status' => 200,
             'models' => $models
@@ -583,3 +653,6 @@ class RegisteredModelsController extends Controller
         }
     }
 }
+
+//INSERT INTO `past_registered_models` (nazwa, producent, skala, styl, wynik, idparent, user_id, categories_id, year) SELECT nazwa, producent, skala, styl, wynik, idparent, users_id, categories_id, 2025 FROM `registered_models`;
+//INSERT INTO `past_grands` (users_id, categories_id, model_id, prixes_id, year) SELECT users_id, categories_id, model_id, prixes_id, 2025 FROM grands;
