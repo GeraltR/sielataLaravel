@@ -4,12 +4,14 @@ namespace App\Filament\Resources\Acknowledgements\Tables;
 
 use App\Models\Acknowledgement;
 use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class AcknowledgementsTable
 {
@@ -50,6 +52,14 @@ class AcknowledgementsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('drukujZaznaczone')
+                        ->label('Drukuj zaznaczone')
+                        ->icon(Heroicon::OutlinedPrinter)
+                        ->url(fn (Collection $records) => route('acknowledgements.print.batch', [
+                            'ids' => $records->pluck('id')->implode(','),
+                        ]))
+                        ->openUrlInNewTab()
+                        ->deselectRecordsAfterCompletion(),
                     DeleteBulkAction::make(),
                 ]),
             ]);
