@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\FestivalRules\Schemas;
 
+use App\Filament\RichEditor\Plugins\FontRichContentPlugin;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -46,8 +47,13 @@ class FestivalRuleForm
                         'alignCenter',
                         'alignEnd',
                         'textColorPicker',
+                        'fontFamily',
+                        'fontSize',
                         'undo',
                         'redo',
+                    ])
+                    ->plugins([
+                        FontRichContentPlugin::make(),
                     ]),
             ]);
     }

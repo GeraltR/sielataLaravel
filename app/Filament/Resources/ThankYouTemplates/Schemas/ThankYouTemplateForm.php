@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ThankYouTemplates\Schemas;
 
+use App\Filament\RichEditor\Plugins\FontRichContentPlugin;
 use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Schema;
 
@@ -30,8 +31,13 @@ class ThankYouTemplateForm
                         'alignCenter',
                         'alignEnd',
                         'textColorPicker',
+                        'fontFamily',
+                        'fontSize',
                         'undo',
                         'redo',
+                    ])
+                    ->plugins([
+                        FontRichContentPlugin::make(),
                     ]),
             ]);
     }

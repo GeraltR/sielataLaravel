@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\RichEditor\Plugins\FontRichContentPlugin;
 use App\Models\Acknowledgement;
 use App\Models\ThankYouTemplate;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Illuminate\Contracts\View\View;
 
 class AcknowledgementPrintController extends Controller
@@ -16,9 +18,13 @@ class AcknowledgementPrintController extends Controller
 
         $content = str_ireplace(
             ['[imie]', '[nazwisko]', '[nazwa]'],
-            [$acknowledgement->imie, $acknowledgement->nazwisko, $acknowledgement->nazwa],
+            [e($acknowledgement->imie), e($acknowledgement->nazwisko), e($acknowledgement->nazwa)],
             $content
         );
+
+        $content = RichContentRenderer::make($content)
+            ->plugins([FontRichContentPlugin::make()])
+            ->toHtml();
 
         return view('acknowledgements.print', [
             'content' => $content,
