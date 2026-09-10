@@ -656,3 +656,6 @@ class RegisteredModelsController extends Controller
         }
     }
 }
+
+//INSERT INTO `past_registered_models` (nazwa, producent, skala, styl, wynik, idparent, user_id, categories_id, year) SELECT nazwa, producent, skala, styl, wynik, idparent, users_id, categories_id, 2025 FROM `registered_models`;
+//INSERT INTO `past_grands` (users_id, categories_id, model_id, prixes_id, year) SELECT users_id, categories_id, model_id, prixes_id, 2025 FROM grands;

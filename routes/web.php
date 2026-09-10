@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AcknowledgementPrintController;
+
+Route::get('/podziekowania/{acknowledgement}/print', [AcknowledgementPrintController::class, 'show'])
+    ->name('acknowledgements.print');
+
 Route::get('/xdebug', function () { xdebug_info(); });
 Route::get('/phpinfo', function () { phpinfo(); });
 Route::get('/', function () {
