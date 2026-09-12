@@ -12,19 +12,23 @@ class ModelsRatingsController extends Controller
 
     public function set_points(Request $request, $user_id)
     {
+        // Security: judge_id must come from the authenticated session, never
+        // from the request body — otherwise any logged-in user could submit
+        // an arbitrary `id_jury` and overwrite another judge's ratings.
+        $judgeId = auth()->id();
 
         $wynik = ModelsRatings::where('model_id', $request->model_id)
-            ->where('judge_id', $request->id_jury)
+            ->where('judge_id', $judgeId)
             ->exists();
         if (!$wynik) {
             DB::insert(
                 'insert into models_ratings (points, flaga, model_id, judge_id) values (?, ?, ?, ?)',
-                [$request->points, $request->flaga, $request->model_id, $request->id_jury]
+                [$request->points, $request->flaga, $request->model_id, $judgeId]
             );
             $modelresult =  DB::getPdo()->lastInsertId();
         } else $modelresult = DB::update(
             'update models_ratings set points = ?, flaga = ? where model_id = ? and judge_id = ?',
-            [$request->points, $request->flaga, $request->model_id, $request->id_jury]
+            [$request->points, $request->flaga, $request->model_id, $judgeId]
         );
 
         return $modelresult;
