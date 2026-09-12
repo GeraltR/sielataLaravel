@@ -11,7 +11,7 @@ use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Js;
 
 class AcknowledgementsTable
 {
@@ -55,11 +55,16 @@ class AcknowledgementsTable
                     BulkAction::make('drukujZaznaczone')
                         ->label('Drukuj zaznaczone')
                         ->icon(Heroicon::OutlinedPrinter)
-                        ->url(fn (Collection $records) => route('acknowledgements.print.batch', [
-                            'ids' => $records->pluck('id')->implode(','),
-                        ]))
-                        ->openUrlInNewTab()
-                        ->deselectRecordsAfterCompletion(),
+                        // Uses the browser's own `selectedRecords` set (Alpine.js), evaluated
+                        // at click time, instead of a PHP-rendered `url()`. Filament tracks
+                        // table row selection client-side only (no request per checkbox), so
+                        // a `url()` closure gets baked in at page load with an empty selection
+                        // and never updates — this stayed correct regardless of what's checked.
+                        ->alpineClickHandler(
+                            'window.open('
+                                . Js::from(route('acknowledgements.print.batch'))
+                                . ' + "?ids=" + [...selectedRecords].join(","), "_blank")'
+                        ),
                     DeleteBulkAction::make(),
                 ]),
             ]);
