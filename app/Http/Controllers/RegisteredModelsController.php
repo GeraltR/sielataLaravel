@@ -78,6 +78,7 @@ class RegisteredModelsController extends Controller
                 'users.id',
                 'users.imie',
                 'users.nazwisko',
+                'users.klub',
                 DB::raw('"WYRÓŻNIENIE" as typeName')
             )
             ->whereRaw('EXISTS (SELECT 1 FROM registered_models where registered_models.users_id=users.id)')
