@@ -60,10 +60,16 @@ class AcknowledgementsTable
                         // table row selection client-side only (no request per checkbox), so
                         // a `url()` closure gets baked in at page load with an empty selection
                         // and never updates — this stayed correct regardless of what's checked.
+                        //
+                        // Only single quotes are used in the JS below: Filament embeds this
+                        // string raw into the `x-on:click="..."` HTML attribute without
+                        // HTML-escaping it, so a literal `"` here closes the attribute early
+                        // and truncates the handler (confirmed by inspecting the rendered
+                        // attribute value in a real browser).
                         ->alpineClickHandler(
                             'window.open('
                                 . Js::from(route('acknowledgements.print.batch'))
-                                . ' + "?ids=" + [...selectedRecords].join(","), "_blank")'
+                                . " + '?ids=' + [...selectedRecords].join(','), '_blank')"
                         ),
                     DeleteBulkAction::make(),
                 ]),
