@@ -554,6 +554,7 @@ class RegisteredModelsController extends Controller
                 'registered_models.*',
                 'categories.klasa',
                 'categories.symbol',
+                'categories.grupa',
                 'categories.nazwa as categoryName',
                 'users.imie',
                 'users.nazwisko',
