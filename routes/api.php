@@ -54,6 +54,10 @@ Route::middleware(['auth:sanctum'])->post('/add_grand', [GrandsControler::class,
 Route::middleware(['auth:sanctum'])->delete('/delete_result_grand_prix/{id}', [GrandsControler::class, 'delete_result_grand_prix']);
 
 Route::middleware(['auth:sanctum'])->get('/listgrandprixes/{isactiv}', [GrandPrixesController::class, 'get_list_grand_prixes']);
+Route::middleware(['auth:sanctum'])->post('/grandprixes', [GrandPrixesController::class, 'store']);
+Route::middleware(['auth:sanctum'])->put('/grandprixes/{id}', [GrandPrixesController::class, 'update']);
+Route::middleware(['auth:sanctum'])->get('/grandprixes/{id}/deletable', [GrandPrixesController::class, 'checkDeletable']);
+Route::middleware(['auth:sanctum'])->delete('/grandprixes/{id}', [GrandPrixesController::class, 'destroy']);
 
 
 Route::get('/rewardmodels/{category_id}', [RegisteredModelsController::class, 'get_reward_models']);

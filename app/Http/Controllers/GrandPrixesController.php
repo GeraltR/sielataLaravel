@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\GrandPrixes;
+use App\Models\Grands;
+use App\Models\PastGrands;
 
 class GrandPrixesController extends Controller
 {
@@ -37,22 +39,21 @@ class GrandPrixesController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nazwa' => ['required', 'string', 'max:150'],
-            'users_id' => ['required', 'integer'],
-            'categories_id' => ['required', 'integer']
+        $data = $request->validate([
+            'prix_name' => ['required', 'string', 'max:255'],
+            'information' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $registered_model = GrandPrixes::create([
-            'nazwa' => $request->nazwa,
-            'producent' => $request->producent,
-            'skala' => $request->skala,
-            'users_id' => $request->users_id,
-            'categories_id' => $request->categories_id
+        $prix = GrandPrixes::create([
+            'prix_name' => $data['prix_name'],
+            'information' => $data['information'] ?? '',
+            'isActiv' => true,
         ]);
 
-        $last_id = $registered_model;
-        return $last_id;
+        return response()->json([
+            'status' => 200,
+            'prix' => $prix,
+        ]);
     }
 
     /**
@@ -103,7 +104,39 @@ class GrandPrixesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $prix = GrandPrixes::findOrFail($id);
+
+        $data = $request->validate([
+            'prix_name' => ['required', 'string', 'max:255'],
+            'information' => ['nullable', 'string', 'max:255'],
+            'isActiv' => ['required', 'boolean'],
+        ]);
+
+        $prix->update($data);
+
+        return response()->json([
+            'status' => 200,
+            'prix' => $prix,
+        ]);
+    }
+
+    /**
+     * Check whether the given prize may be deleted, without deleting it.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function checkDeletable($id)
+    {
+        $prix = GrandPrixes::findOrFail($id);
+
+        [$deletable, $reason] = $this->deletableState($prix);
+
+        return response()->json([
+            'status' => 200,
+            'deletable' => $deletable,
+            'reason' => $reason,
+        ]);
     }
 
     /**
@@ -114,6 +147,48 @@ class GrandPrixesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $prix = GrandPrixes::findOrFail($id);
+
+        [$deletable, $reason] = $this->deletableState($prix);
+
+        if (!$deletable) {
+            return response()->json([
+                'status' => 422,
+                'reason' => $reason,
+                'message' => $this->reasonMessage($reason),
+            ], 422);
+        }
+
+        $prix->delete();
+
+        return response()->noContent();
+    }
+
+    /**
+     * @return array{0: bool, 1: string|null}
+     */
+    private function deletableState(GrandPrixes $prix): array
+    {
+        if ($prix->isActiv) {
+            return [false, 'active'];
+        }
+
+        $used = Grands::where('prixes_id', $prix->id)->exists()
+            || PastGrands::where('prixes_id', $prix->id)->exists();
+
+        if ($used) {
+            return [false, 'used'];
+        }
+
+        return [true, null];
+    }
+
+    private function reasonMessage(?string $reason): string
+    {
+        return match ($reason) {
+            'active' => 'Usunąć można tylko nieaktywne nagrody. Dezaktywuj nagrodę przed usunięciem.',
+            'used' => 'Ta nagroda była już przyznana i nie można jej usunąć.',
+            default => 'Nie można usunąć tej nagrody.',
+        };
     }
 }
